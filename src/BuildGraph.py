@@ -7,7 +7,7 @@ def readData(fileName):
 #Table 2: user id ,prodcut id, rating
 
 class TriGraph():
-    def __init__(self):
+    def __init__(self, df_tag, df_pref):
         self.dict = {}
         self.userCount = -1
         self.prefCount = -1
@@ -23,6 +23,8 @@ class TriGraph():
         self.tags_U = {}
         self.tags_D = {}
         self.NodeList = {}
+        self.buildGraghFromProduct(df_tag)
+        self.buildGraghFromUser(df_pref)
     
     def buildGraghFromUser(self, df):
         prev = ""
@@ -35,11 +37,14 @@ class TriGraph():
             if count == 0: 
                 prev = row['user']
                 prev_id = self.hashID('user', row['user'])
-
+            count+=1
+            print(row['user'])
+            print('P', prev)
             if row['user'] != prev:
                 #construct the graph by prev user
-                self.dict[prev_id] = []
+                print(prev)
                 products.sort(key = lambda x: x[1])
+                self.dict[prev_id] = []
                 for i in range(len(products)-1):
                     for j in range(i+1, len(products)):
                         a = products[i][0]
@@ -56,7 +61,19 @@ class TriGraph():
                 products = [(product, rating)]
             else: 
                 products.append((product, rating))
-            
+        
+        products.sort(key = lambda x: x[1])
+        self.dict[prev_id] = []
+        for i in range(len(products)-1):
+            for j in range(i+1, len(products)):
+                a = products[i][0]
+                b = products[j][0]
+                pref = self.compare(a,b)
+                self.dict[prev_id].append(pref)
+                if pref not in self.dict:
+                    self.dict[pref] = [prev_id]
+                else: self.dict[pref].append(prev_id)
+    
     def buildGraghFromProduct(self, df):
         products = []
         for _, row in df.iterrows():
@@ -170,4 +187,4 @@ class TriGraph():
             for item in self.dict[key]:
                 s = 'next_' + item[:4]
                 self.NodeList[key][s].append(item)   
-            
+    

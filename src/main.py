@@ -7,18 +7,21 @@ if __name__ == "__main__":
     df_tag = readData(tag_filename)
     df_pref = readData(pref_filename)
 
-    G = TriGraph()
-    G.buildGraghFromProduct(df_tag)
-    G.buildGraghFromUser(df_pref)
-
+    G = TriGraph(df_tag, df_pref)
+    
     userNumber = G.userCount
     prefNumber = G.prefCount
     productDNumber = G.prodDCount
     productUNumber = G.prodUCount
     tagDNumber = G.tagDCount
     tagUNumber = G.tagUCount
+
     G.buildNodeList()
-    print(G.NodeList)
+    #print(G.NodeList)
     
-    #df = G.buildMapping()
-    #df.to_csv('test.csv',index = False)
+    f = open('typeMap.txt','w')
+    for key in G.dict:
+        f.write(key + ' ' + key[:4] + '\n')
+
+    df = G.buildMapping()
+    df.to_csv('test.csv',index = False)
