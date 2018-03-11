@@ -38,22 +38,24 @@ class TriGraph():
                 prev = row['user']
                 prev_id = self.hashID('user', row['user'])
             count+=1
-            print(row['user'])
-            print('P', prev)
+            #print(row['user'])
+            #print('P', prev)
             if row['user'] != prev:
                 #construct the graph by prev user
-                print(prev)
-                products.sort(key = lambda x: x[1])
+                #print(prev)
+                products.sort(key = lambda x: x[1], reverse=True)
                 self.dict[prev_id] = []
-                for i in range(len(products)-1):
-                    for j in range(i+1, len(products)):
-                        a = products[i][0]
-                        b = products[j][0]
-                        pref = self.compare(a,b)
-                        self.dict[prev_id].append(pref)
-                        if pref not in self.dict:
-                            self.dict[pref] = [prev_id]
-                        else: self.dict[pref].append(prev_id)
+                if products[0] != products[-1]: 
+                    for i in range(len(products)-1):
+                        for j in range(i+1, len(products)):
+                            a = products[i][0]
+                            b = products[j][0]
+                            if products[i][1] > products[j][1]: 
+                                pref = self.compare(a,b)
+                                self.dict[prev_id].append(pref)
+                                if pref not in self.dict:
+                                    self.dict[pref] = [prev_id]
+                                else: self.dict[pref].append(prev_id)
                     
                 #Start new user
                 prev = row['user']
@@ -62,17 +64,19 @@ class TriGraph():
             else: 
                 products.append((product, rating))
         
-        products.sort(key = lambda x: x[1])
+        products.sort(key = lambda x: x[1], reverse=True)
         self.dict[prev_id] = []
-        for i in range(len(products)-1):
-            for j in range(i+1, len(products)):
-                a = products[i][0]
-                b = products[j][0]
-                pref = self.compare(a,b)
-                self.dict[prev_id].append(pref)
-                if pref not in self.dict:
-                    self.dict[pref] = [prev_id]
-                else: self.dict[pref].append(prev_id)
+        if products[0] != products[-1]:
+            for i in range(len(products)-1):
+                for j in range(i+1, len(products)):
+                    a = products[i][0]
+                    b = products[j][0]
+                    if a > b:
+                        pref = self.compare(a,b)
+                        self.dict[prev_id].append(pref)
+                        if pref not in self.dict:
+                            self.dict[pref] = [prev_id]
+                        else: self.dict[pref].append(prev_id)
     
     def buildGraghFromProduct(self, df):
         products = []
@@ -175,8 +179,10 @@ class TriGraph():
             df.loc[-1] = [key, Dict[key]]
             df.index+=1
         
-    def buildNodeList(self):
+    def buildNodeList(self, remove = True):
         for key in self.dict:
+            if remove and not self.dict[key]:
+                continue
             self.NodeList[key] = {}
             self.NodeList[key]['next_user'] = []
             self.NodeList[key]['next_pref'] = []
@@ -187,4 +193,4 @@ class TriGraph():
             for item in self.dict[key]:
                 s = 'next_' + item[:4]
                 self.NodeList[key][s].append(item)   
-    
+         
