@@ -2,8 +2,8 @@ from BuildGraph import*
 import pandas as pd
 
 if __name__ == "__main__":
-    tag_filename = 'toy_tags.txt'
-    pref_filename = 'toy_preference.txt'
+    tag_filename = '../corpus/toy_tags.txt'
+    pref_filename = '../corpus/toy_preference.txt'
     df_tag = readData(tag_filename)
     df_pref = readData(pref_filename)
 
@@ -25,11 +25,11 @@ if __name__ == "__main__":
         print(G.dict['user_'+str(i)])
     #print(G.NodeList)
     
-    f = open('typeMap.txt','w')
+    f = open('../corpus/typeMap.txt','w')
     for key in G.dict:
         f.write(key + ' ' + key[:4] + '\n')
 
     df = G.buildMapping()
-    df.to_csv('test.csv', index = False)
+    df.to_csv('../corpus/test.csv', index = False)
     '''
     
