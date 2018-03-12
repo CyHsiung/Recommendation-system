@@ -197,6 +197,7 @@ class TriGraph():
                 s = 'next_' + item[:4]
                 self.NodeList[key][s].append(item)   
     
-    def getCount(self):
-
+    def getCount(self, remove = True):
+        if not remove:
+            return [self.userCount+1, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
         return [self.userNum, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]

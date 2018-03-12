@@ -15,7 +15,9 @@ if __name__ == "__main__":
     NodeList = G.NodeList
     
     #counts: [userNum, prefNum, prodUNum, prodDNum, tagUNum, tagDNum]
-    counts = G.getCount()
+    #G.getCount(False) -> user without neighbor still counts
+    #G.getCount() -> user without neighbor does not count
+    counts = G.getCount(False)
     print(counts)
     
     '''
