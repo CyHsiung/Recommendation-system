@@ -18,8 +18,9 @@ if __name__ == "__main__":
 
     # G.buildNodeList() -> remove user without neighbors
     # G.buildNodeList(False) -> do not remove user without neighbors 
-    NodeList = G.buildNodeList()
-    
+    G.buildNodeList()
+    NodeList = G.NodeList
+    print(NodeList['user_0'])
     '''
     for i in range(9):
         print(G.dict['user_'+str(i)])

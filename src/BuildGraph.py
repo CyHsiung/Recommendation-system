@@ -188,7 +188,7 @@ class TriGraph():
             self.NodeList[key]['next_pref'] = []
             self.NodeList[key]['next_prod'] = []
             self.NodeList[key]['next_tags'] = []
-            self.NodeList[key]['Type'] = key.split('_')[0]  
+            self.NodeList[key]['Type'] = key.split('_')[0][:4]  
             self.NodeList[key]['Id'] = key
             for item in self.dict[key]:
                 s = 'next_' + item[:4]
