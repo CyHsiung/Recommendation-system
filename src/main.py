@@ -19,9 +19,21 @@ if __name__ == "__main__":
     productUNumber = G.prodUCount
     tagDNumber = G.tagDCount
     tagUNumber = G.tagUCount
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+    # G.buildNodeList() -> remove user without neighbors
+    # G.buildNodeList(False) -> do not remove user without neighbors 
+    G.buildNodeList()
+    NodeList = G.NodeList
+    print(NodeList['user_0'])
+=======
+>>>>>>> c665c32e07
     '''
     NodeList = G.NodeList
     
+>>>>>>> checkpoint
     '''
     for i in range(9):
         print(G.dict['user_'+str(i)])

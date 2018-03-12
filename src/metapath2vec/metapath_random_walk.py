@@ -19,13 +19,18 @@ def import_graph(tag_filename, pref_filename):
     # G.buildNodeList() -> remove user without neighbors
     # G.buildNodeList(False) -> do not remove user without neighbors 
     G.buildNodeList()
-    return G.NodeList
+    userNum = G.userCount
+    prodNum = G.prodDCount
+    return G.NodeList, userNum, prodNum
     
 
-def metaPath_random_walk(pathNum, stepInEachPath, writeFileName, nodeById, meta_path_format):
-    f = open(join(corpus_dir, writeFileName), 'w')
-    for i in range(pathNum):
-        startKey = random.choice(list(nodeById.keys()))
+
+def create_path(num, catagory, stepInEachPath, f, nodeById, meta_path_format): 
+    
+    for i in range(num):
+        startKey = catagory + '_' + str(i)
+        if startKey not in nodeById:
+            continue
         # curNode is a dictionary with:
         # Id, Type, next_user, next_pref, next_prod, next_tags
         curNode = nodeById[startKey]
@@ -36,7 +41,6 @@ def metaPath_random_walk(pathNum, stepInEachPath, writeFileName, nodeById, meta_
         for j in range(stepInEachPath - 1):
             nextTypeId = (j + idBias + 1) % len(meta_path_format)
             nextType = meta_path_format[nextTypeId]
-            print(curNode['Type'],', ', nextType)
             if curNode['next_' + nextType]: 
                 nextId = random.choice(curNode['next_' + nextType])
                 if nextId == curNode['Id'] and len(curNode['next_' + nextType]) == 1:
@@ -53,20 +57,24 @@ def metaPath_random_walk(pathNum, stepInEachPath, writeFileName, nodeById, meta_
                 if not candidate:
                     print(nextType, curNode['Type'], '\n', curNode)
                     break
-                nextNodeId = random.choice(candidate)
+                nextId = random.choice(candidate)
             curNode = nodeById[nextId]
             f.write(" {}".format(curNode['Id']))
-
         f.write("\n")
+def metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format):
+    f = open(join(corpus_dir, writeFileName), 'w')
+    create_path(userNum, 'user', stepInEachPath, f, nodeById, meta_path_format)
+    create_path(prodNum, 'product_U', stepInEachPath, f, nodeById, meta_path_format)
+    create_path(prodNum, 'product_D', stepInEachPath, f, nodeById, meta_path_format)
     f.close()
-        
                 
 if __name__ == '__main__':
-    pathNum = 10
-    stepInEachPath = 10
+    stepInEachPath = 20
     writeFileName = 'random_walk.txt'
     meta_path_format = ['user', 'pref', 'prod', 'tags', 'prod', 'pref']
     tag_filename = join(project_dir, 'corpus/toy_tags.txt')
     pref_filename = join(project_dir, 'corpus/toy_preference.txt')
     nodeById = import_graph(tag_filename, pref_filename)
     metaPath_random_walk(pathNum, stepInEachPath, writeFileName, nodeById, meta_path_format) 
+    nodeById, userNum, prodNum = import_graph(tag_filename, pref_filename)
+    metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format) 
