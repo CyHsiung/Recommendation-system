@@ -6,16 +6,19 @@ class to get the data in a batch way
 includes the sampler for word2vec negative sampling
 '''
 
-
 import numpy as np
 import random
 # import scipy
 import os
+from os.path import join
+
+project_dir = '../../'
+corpus_dir = join(project_dir, 'corpus')
 
 class Dataset(object):
     def __init__(self,random_walk_txt,node_type_mapping_txt,window_size):
         index2token,token2index,word_and_counts,index2frequency,node_context_pairs= self.parse_random_walk_txt(random_walk_txt,window_size)
-        print(index2token,token2index,word_and_counts,index2frequency,node_context_pairs)
+        # print(index2token,token2index,word_and_counts,index2frequency,node_context_pairs)
         self.window_size = window_size
         self.nodeid2index = token2index
         self.index2nodeid = index2token
@@ -40,7 +43,8 @@ class Dataset(object):
                     print("something is wrong!!!")
                     print(pair)
                     continue
-                index2type[nodeid2index[pair[0]]]=pair[1]
+                if pair[0] in nodeid2index:    
+                    index2type[nodeid2index[pair[0]]]=pair[1]
 
         type2indices = {}
         all_types = set(index2type.values())
@@ -87,9 +91,9 @@ class Dataset(object):
                 sent = [token2index[word.strip()] for word in line.split(' ') if word.strip() in token2index]
                 sent_length=len(sent)
                 for target_word_position,target_word_idx in enumerate(sent):
-                    start=max(0,target_word_position-window_size)
-                    end=min(sent_length,target_word_position+window_size)
-                    context=sent[start:target_word_position]+sent[target_word_position+1:end+1]
+                    start=max(0,target_word_position - window_size)
+                    end=min(sent_length,target_word_position + window_size)
+                    context=sent[start:target_word_position] + sent[target_word_position+1:end]
                     for contex_word_idx in context:
                         node_context_pairs.append((target_word_idx,contex_word_idx))
                         #word_word[target_word_idx,contex_word_idx]+=1
@@ -155,7 +159,7 @@ class Dataset(object):
 
 if __name__ == '__main__':
     #test code  
-    dataset=Dataset(random_walk_txt="../data/test_data/random_walks.txt",node_type_mapping_txt="../data/test_data/node_type_mapings.txt",window_size=1)
+    dataset=Dataset(random_walk_txt = join(corpus_dir, "random_walk.txt"), node_type_mapping_txt = join(corpus_dir, "typeMap.txt"), window_size=1)
     print(dataset.get_batch(2))
     center,context = dataset.get_one_batch()
     print(dataset.sampling_prob)
