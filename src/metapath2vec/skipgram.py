@@ -12,6 +12,10 @@ import os
 import numpy as np
 import tensorflow as tf
 import json
+from os.path import join
+
+project_dir = '../../'
+corpus_dir = join(project_dir, 'corpus')
 
 def build_model(BATCH_SIZE,VOCAB_SIZE,EMBED_SIZE,NUM_SAMPLED):
     '''

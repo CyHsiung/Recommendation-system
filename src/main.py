@@ -8,17 +8,19 @@ if __name__ == "__main__":
     df_pref = readData(pref_filename)
 
     G = TriGraph(df_tag, df_pref)
+    # G.buildNodeList() -> remove user without neighbors
+    # G.buildNodeList(False) -> do not remove user without neighbors 
+    G.buildNodeList()
     
+    '''
     userNumber = G.userCount
     prefNumber = G.prefCount
     productDNumber = G.prodDCount
     productUNumber = G.prodUCount
     tagDNumber = G.tagDCount
     tagUNumber = G.tagUCount
-
-    # G.buildNodeList() -> remove user without neighbors
-    # G.buildNodeList(False) -> do not remove user without neighbors 
-    NodeList = G.buildNodeList()
+    '''
+    NodeList = G.NodeList
     
     '''
     for i in range(9):
