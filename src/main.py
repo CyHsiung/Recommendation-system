@@ -14,6 +14,7 @@ if __name__ == "__main__":
     G.buildNodeList()
     NodeList = G.NodeList
     
+    #counts: [userNum, prefNum, prodUNum, prodDNum, tagUNum, tagDNum]
     counts = G.getCount()
     print(counts)
     
