@@ -14,7 +14,11 @@ import tensorflow as tf
 import json
 from os.path import join
 
-project_dir = '../../'
+# project_dir: Recommedation/
+project_dir = os.path.abspath('./')
+while project_dir[-3:] != 'src':
+    project_dir = os.path.abspath(join(project_dir, os.pardir))
+project_dir = join(project_dir, '..')
 corpus_dir = join(project_dir, 'corpus')
 
 def build_model(BATCH_SIZE,VOCAB_SIZE,EMBED_SIZE,NUM_SAMPLED):

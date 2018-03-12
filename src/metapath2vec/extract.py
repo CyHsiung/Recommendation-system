@@ -2,21 +2,26 @@ import numpy as np
 import json
 from os.path import join
 import sys
-sys.path.append("../")
-
-from BuildGraph import*
+import os
 
 #node embeddings of "yi"
 # print(node_embeddings[nodeid2index["product_D_35"]])
-project_dir = '../../'
+
+# project_dir: Recommedation/
+project_dir = os.path.abspath('./')
+while project_dir[-3:] != 'src':
+    project_dir = os.path.abspath(join(project_dir, os.pardir))
+project_dir = join(project_dir, '..')
+sys.path.append(project_dir)
+from src.BuildGraph import*
 corpus_dir = join(project_dir, 'corpus')
 
 def output_numpy(userNum, prodNum, embedDim):
     # read dictionary form json file
-    index2nodeid = json.load(open("./log/index2nodeid.json"))
+    index2nodeid = json.load(open(join(corpus_dir, "log/index2nodeid.json")))
     index2nodeid = {int(k):v for k,v in index2nodeid.items()}
     nodeid2index = {v:int(k) for k,v in index2nodeid.items()}
-    node_embeddings = np.load("./log/node_embeddings.npz")['arr_0']
+    node_embeddings = np.load(join(corpus_dir, "log/node_embeddings.npz"))['arr_0']
 
     # start
     userEmbed = np.zeros((userNum, embedDim))

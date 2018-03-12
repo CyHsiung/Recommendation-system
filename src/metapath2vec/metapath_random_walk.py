@@ -3,12 +3,16 @@ from os.path import join
 import random
 
 import sys
-sys.path.append("../")
-
-from BuildGraph import*
+import os
 import pandas as pd
 
-project_dir = '../../'
+# project_dir: Recommedation/
+project_dir = os.path.abspath('./')
+while project_dir[-3:] != 'src':
+    project_dir = os.path.abspath(join(project_dir, os.pardir))
+project_dir = join(project_dir, '..')
+sys.path.append(project_dir)
+from src.BuildGraph import*
 corpus_dir = join(project_dir, 'corpus')
 
 def import_graph(tag_filename, pref_filename):
@@ -19,8 +23,12 @@ def import_graph(tag_filename, pref_filename):
     # G.buildNodeList() -> remove user without neighbors
     # G.buildNodeList(False) -> do not remove user without neighbors 
     G.buildNodeList()
-    userNum = G.userCount
-    prodNum = G.prodDCount
+    #counts: [userNum, prefNum, prodUNum, prodDNum, tagUNum, tagDNum]
+    #G.getCount(False) -> user without neighbor still counts
+    #G.getCount() -> user without neighbor does not count
+    counts = G.getCount(False)
+    userNum = counts[0]
+    prodNum = counts[2]
     return G.NodeList, userNum, prodNum
     
 
@@ -74,7 +82,5 @@ if __name__ == '__main__':
     meta_path_format = ['user', 'pref', 'prod', 'tags', 'prod', 'pref']
     tag_filename = join(project_dir, 'corpus/toy_tags.txt')
     pref_filename = join(project_dir, 'corpus/toy_preference.txt')
-    nodeById = import_graph(tag_filename, pref_filename)
-    metaPath_random_walk(pathNum, stepInEachPath, writeFileName, nodeById, meta_path_format) 
     nodeById, userNum, prodNum = import_graph(tag_filename, pref_filename)
     metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format) 

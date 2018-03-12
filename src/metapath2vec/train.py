@@ -10,7 +10,11 @@ import time
 from skipgram import build_model,traning_op,train
 from dataset import Dataset
 from os.path import join
-project_dir = '../../'
+# project_dir: Recommedation/
+project_dir = os.path.abspath('./')
+while project_dir[-3:] != 'src':
+    project_dir = os.path.abspath(join(project_dir, os.pardir))
+project_dir = join(project_dir, '..')
 corpus_dir = join(project_dir, 'corpus')
 
 def parse_args(embedDim):
@@ -21,7 +25,7 @@ def parse_args(embedDim):
     parser.add_argument('--epochs',type=int,default = 10, help='number of epochs')
     # parser.add_argument('--batch',type=int,default=1, help='Batch size.Only batch one is supported now...')
     parser.add_argument('--lr',type=float,default=0.01, help='learning rate')
-    parser.add_argument('--log', default = './log',type=str,help='log directory')
+    parser.add_argument('--log', default = join(corpus_dir, './log'),type=str,help='log directory')
     parser.add_argument('--log-interval',default=-1,type=int,help='log intervals. -1 means per epoch')
     parser.add_argument('--max-keep-model',default=10,type=int,help='number of models to keep saving')
     parser.add_argument('--embedding-dim',default = embedDim,type=int,help='embedding dimensions')

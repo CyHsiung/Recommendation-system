@@ -12,7 +12,8 @@ import random
 import os
 from os.path import join
 
-project_dir = '../../'
+# project_dir: Recommeddation/
+project_dir = join(os.path.abspath(os.path.join('src/..', os.pardir)), '../')
 corpus_dir = join(project_dir, 'corpus')
 
 class Dataset(object):
