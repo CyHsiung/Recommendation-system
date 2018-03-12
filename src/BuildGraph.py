@@ -9,6 +9,7 @@ def readData(fileName):
 class TriGraph():
     def __init__(self, df_tag, df_pref):
         self.dict = {}
+        self.userNum = 0
         self.userCount = -1
         self.prefCount = -1
         self.prodUCount = -1
@@ -180,8 +181,10 @@ class TriGraph():
             df.index+=1
         
     def buildNodeList(self, remove = True):
+        self.userNum = self.userCount+1
         for key in self.dict:
             if remove and not self.dict[key]:
+                self.userNum -=1
                 continue
             self.NodeList[key] = {}
             self.NodeList[key]['next_user'] = []
@@ -193,4 +196,7 @@ class TriGraph():
             for item in self.dict[key]:
                 s = 'next_' + item[:4]
                 self.NodeList[key][s].append(item)   
-         
+    
+    def getCount(self):
+
+        return [self.userNum, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
