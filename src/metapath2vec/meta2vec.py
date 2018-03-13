@@ -1,14 +1,18 @@
-from metapath_random_walk import import_graph, metaPath_random_walk
-from train import main, parse_args
-from extract import output_numpy
 from os.path import join
 import os
+import sys
 
 # project_dir: Recommedation/
 project_dir = os.path.abspath('./')
 while project_dir[-3:] != 'src':
     project_dir = os.path.abspath(join(project_dir, os.pardir))
 project_dir = join(project_dir, '..')
+sys.path.append(project_dir)
+
+from src.metapath2vec.metapath_random_walk import import_graph, metaPath_random_walk
+from src.metapath2vec.train import main, parse_args
+from src.metapath2vec.extract import output_numpy
+
 corpus_dir = join(project_dir, 'corpus')
 def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, embedDim = 100, nEpoch = 10, windowSize = 3): 
     stepInEachPath = 20

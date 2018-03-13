@@ -7,8 +7,6 @@ import sys
 import os
 import time
 
-from skipgram import build_model,traning_op,train
-from dataset import Dataset
 from os.path import join
 # project_dir: Recommedation/
 project_dir = os.path.abspath('./')
@@ -16,6 +14,9 @@ while project_dir[-3:] != 'src':
     project_dir = os.path.abspath(join(project_dir, os.pardir))
 project_dir = join(project_dir, '..')
 corpus_dir = join(project_dir, 'corpus')
+sys.path.append(project_dir)
+from src.metapath2vec.skipgram import build_model,traning_op,train
+from src.metapath2vec.dataset import Dataset
 
 def parse_args(embedDim, nEpoch, windowSize = 3):
     #Parses the arguments.
