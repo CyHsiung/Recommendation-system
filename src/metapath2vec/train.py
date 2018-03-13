@@ -17,12 +17,12 @@ while project_dir[-3:] != 'src':
 project_dir = join(project_dir, '..')
 corpus_dir = join(project_dir, 'corpus')
 
-def parse_args(embedDim):
+def parse_args(embedDim, nEpoch, windowSize = 3):
     #Parses the arguments.
     parser = argparse.ArgumentParser(description="metapath2vec")
     parser.add_argument('--walks',type=str,default = join(corpus_dir, 'random_walk.txt'), help='text file that has a random walk in each line. A random walk is just a seaquence of node ids separated by a space.')
     parser.add_argument('--types',type=str,default = join(corpus_dir, 'typeMap.txt'), help='text file that has node types. each line is "node id <space> node type"')
-    parser.add_argument('--epochs',type=int,default = 10, help='number of epochs')
+    parser.add_argument('--epochs',type=int,default = nEpoch, help='number of epochs')
     # parser.add_argument('--batch',type=int,default=1, help='Batch size.Only batch one is supported now...')
     parser.add_argument('--lr',type=float,default=0.01, help='learning rate')
     parser.add_argument('--log', default = join(corpus_dir, './log'),type=str,help='log directory')
@@ -31,7 +31,7 @@ def parse_args(embedDim):
     parser.add_argument('--embedding-dim',default = embedDim,type=int,help='embedding dimensions')
     parser.add_argument('--negative-samples',default = 5,type=int,help='number of negative samples')
     parser.add_argument('--care-type',default = 0,type=int,help='care type or not. if 1, it cares (i.e. heterogeneous negative sampling). If 0, it does not care (i.e. normal negative sampling). ')
-    parser.add_argument('--window',default = 3,type=int,help='context window size')
+    parser.add_argument('--window',default = windowSize,type=int,help='context window size')
 
     return parser.parse_args()
 

@@ -10,19 +10,22 @@ while project_dir[-3:] != 'src':
     project_dir = os.path.abspath(join(project_dir, os.pardir))
 project_dir = join(project_dir, '..')
 corpus_dir = join(project_dir, 'corpus')
-def meta2vec(): 
+def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, embedDim = 100, nEpoch = 10, windowSize = 3): 
     stepInEachPath = 20
     embedDim = 100
     writeFileName = 'random_walk.txt'
     meta_path_format = ['user', 'pref', 'prod', 'tags', 'prod', 'pref']
-    tag_filename = join(project_dir, 'corpus/toy_tags.txt')
-    pref_filename = join(project_dir, 'corpus/toy_preference.txt')
+    if not tag_fileName:
+        tag_fileName = join(project_dir, 'corpus/toy_tags.txt')
+    if not pref_fileName:
+        pref_fileName = join(project_dir, 'corpus/toy_preference.txt')
     # get graph parameter
-    nodeById, userNum, prodNum = import_graph(tag_filename, pref_filename)
+    if not nodeById:
+        nodeById, userNum, prodNum = import_graph(tag_fileName, pref_fileName)
     # produce random path
     metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format)
     # train the model 
-    args = parse_args(embedDim)
+    args = parse_args(embedDim, nEpoch, windowSize)
     main(args)
     # output two embed matrix and the miss user list
     userEmbed, prodEmbed, missingUser = output_numpy(userNum, prodNum, embedDim)
