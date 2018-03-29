@@ -10,9 +10,11 @@ import time
 from os.path import join
 # project_dir: Recommedation/
 project_dir = os.path.abspath('./')
+'''
 while project_dir[-3:] != 'src':
     project_dir = os.path.abspath(join(project_dir, os.pardir))
 project_dir = join(project_dir, '..')
+'''
 corpus_dir = join(project_dir, 'corpus')
 sys.path.append(project_dir)
 from src.metapath2vec.skipgram import build_model,traning_op,train

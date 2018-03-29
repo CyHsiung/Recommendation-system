@@ -8,9 +8,11 @@ import pandas as pd
 
 # project_dir: Recommedation/
 project_dir = os.path.abspath('./')
+'''
 while project_dir[-3:] != 'src':
     project_dir = os.path.abspath(join(project_dir, os.pardir))
 project_dir = join(project_dir, '..')
+'''
 sys.path.append(project_dir)
 from src.BuildGraph import*
 corpus_dir = join(project_dir, 'corpus')

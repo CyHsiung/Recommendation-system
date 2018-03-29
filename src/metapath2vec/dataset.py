@@ -13,7 +13,7 @@ import os
 from os.path import join
 
 # project_dir: Recommeddation/
-project_dir = join(os.path.abspath(os.path.join('src/..', os.pardir)), '../')
+project_dir = "./"
 corpus_dir = join(project_dir, 'corpus')
 
 class Dataset(object):
