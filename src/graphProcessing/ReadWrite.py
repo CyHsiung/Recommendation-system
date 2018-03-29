@@ -1,7 +1,7 @@
 import json
-from BuildGraph import*
+from src.graphProcessing.BuildGraph import*
 
-def WriteGraph(self, graph, outfileName):
+def writeGraph(graph, outfileName):
     outJsonfileName = './corpus/' + outfileName + '.json'
     outCountfileName = './corpus/' + outfileName + '.count'
     with open(outJsonfileName, 'w') as outfile:
@@ -21,7 +21,7 @@ def WriteGraph(self, graph, outfileName):
         outfile.write('\n')
         outfile.write(str(graph.tagDCount))
         
-def readGraph(self, fileName):
+def readGraph(fileName):
     jsonfileName = './corpus/' + fileName + '.json'
     countfileName = './corpus/' + fileName + '.count' 
     with open(jsonfileName, 'r') as json_data:
@@ -30,7 +30,7 @@ def readGraph(self, fileName):
     f = open(countfileName, 'r')
     line = f.readline()
     while line:
-        line=line.strip.split()
+        line=line.strip().split()
         l.append(int(line[0]))
         line = f.readline()
 

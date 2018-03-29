@@ -10,7 +10,7 @@ def readData(fileName):
 class TriGraph():
     def __init__(self, df_tag=None, df_pref=None, dict=None, userNum=None, userCount=None, 
                 prefCount=None, prodUCount=None, prodDCount=None, tagUCount=None, tagDCount=None, NodeList=None):
-        if df_tag != None and df_pref != None: 
+        if df_tag is not None and df_pref is not None: 
             self.dict = {}
             self.userNum = 0
             self.userCount = -1
