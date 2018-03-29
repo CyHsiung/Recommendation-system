@@ -1,4 +1,5 @@
 import pandas as pd
+import json
 def readData(fileName):
     df = pd.read_table(fileName)
     return df
@@ -201,3 +202,14 @@ class TriGraph():
         if not remove:
             return [self.userCount+1, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
         return [self.userNum, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
+
+    def WriteGraph(self, outfileName):
+        outfileName = './corpus/' + outfileName
+        with open(outfileName, 'w') as outfile:
+            json.dump(data, outfile)
+    
+    def readGraph(self, jsonfileName):
+        jsonfileName = './corpus/' + jsonfileName
+        with open(jsonfileName, 'r') as json_data:
+            d = json.load(json_data)
+        return d
