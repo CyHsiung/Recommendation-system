@@ -16,7 +16,7 @@ from src.metapath2vec.train import main, parse_args
 from src.metapath2vec.extract import output_numpy
 
 corpus_dir = join(project_dir, 'corpus')
-def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, embedDim = 100, nEpoch = 10, windowSize = 3): 
+def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, args = None): 
     stepInEachPath = 20
     embedDim = 100
     writeFileName = 'random_walk.txt'
@@ -31,7 +31,7 @@ def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = Non
     # produce random path
     metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format)
     # train the model 
-    args = parse_args(embedDim, nEpoch, windowSize)
+    # args = parse_args(embedDim, nEpoch, windowSize)
     main(args)
     # output two embed matrix and the miss user list
     userEmbed, prodEmbed, missingUser = output_numpy(userNum, prodNum, embedDim)

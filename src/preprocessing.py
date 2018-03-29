@@ -1,10 +1,12 @@
 import sys
 import re
+import pandas as pd
 from os.path import join
+from tqdm import tqdm
 
 tagFileName = 'tags.txt'
 prefFileName = 'preference.txt'
-corpus_dir = './data'
+corpus_dir = './corpus'
 inputFileName = 'amazon-meta.txt'
 
 cnt = 0
@@ -28,7 +30,8 @@ fw_pref.write("user\tproduct\trating\n")
 
 fr = open(join(corpus_dir, inputFileName), 'r')
 print('preprocessing start')
-for line in fr:
+lines = fr.readlines()
+for line in tqdm(lines):
 	line = line.strip()
 	if cate:
 		cate_cnt -= 1
@@ -56,8 +59,8 @@ for line in fr:
 
 	if line == "":
 		cnt += 1
-		if cnt % 100 == 0:
-			print(cnt / 548552 * 100, '%')
+		# if cnt % 100 == 0:
+		# 	print(cnt / 548552 * 100, '%')
 
 		continue
 
@@ -76,5 +79,11 @@ for line in fr:
 			review = True
 		continue
 
+fw_tag.close()
+fw_pref.close()
 
-
+# Merge preference 
+print("Merging the preference")
+df_pre = pd.read_table(join(corpus_dir, prefFileName))
+df_pre = df_pre.groupby(['user', 'product']).agg('mean')
+df_pre.to_csv(join(corpus_dir, 'merge_' + prefFileName), sep='\t')
