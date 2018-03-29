@@ -3,7 +3,7 @@ from os.path import join
 
 tagFileName = 'tags.txt'
 prefFileName = 'merge_preference.txt'
-corpus_dir = './data'
+corpus_dir = './corpus'
 
 
 user_num = 10
