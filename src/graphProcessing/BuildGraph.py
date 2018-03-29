@@ -8,25 +8,44 @@ def readData(fileName):
 #Table 2: user id ,prodcut id, rating
 
 class TriGraph():
-    def __init__(self, df_tag, df_pref):
-        self.dict = {}
-        self.userNum = 0
-        self.userCount = -1
-        self.prefCount = -1
-        self.prodUCount = -1
-        self.prodDCount = -1
-        self.tagUCount = -1
-        self.tagDCount = -1
+    def __init__(self, df_tag=None, df_pref=None, dict=None, userNum=None, userCount=None, 
+                prefCount=None, prodUCount=None, prodDCount=None, tagUCount=None, tagDCount=None, NodeList=None):
+        if df_tag != None and df_pref != None: 
+            self.dict = {}
+            self.userNum = 0
+            self.userCount = -1
+            self.prefCount = -1
+            self.prodUCount = -1
+            self.prodDCount = -1
+            self.tagUCount = -1
+            self.tagDCount = -1
         
-        self.users = {}
-        self.prefs = {}
-        self.products_U = {}
-        self.products_D = {}
-        self.tags_U = {}
-        self.tags_D = {}
-        self.NodeList = {}
-        self.buildGraghFromProduct(df_tag)
-        self.buildGraghFromUser(df_pref)
+            self.users = {}
+            self.prefs = {}
+            self.products_U = {}
+            self.products_D = {}
+            self.tags_U = {}
+            self.tags_D = {}
+            self.NodeList = {}
+            self.buildGraghFromProduct(df_tag)
+            self.buildGraghFromUser(df_pref)
+        else:
+            self.dict = None
+            self.userNum = userNum
+            self.userCount = userCount
+            self.prefCount = prefCount
+            self.prodUCount = prodUCount
+            self.prodDCount = prodDCount
+            self.tagUCount = tagUCount
+            self.tagDCount = tagDCount
+        
+            self.users = None
+            self.prefs = None
+            self.products_U = None
+            self.products_D = None
+            self.tags_U = None
+            self.tags_D = None
+            self.NodeList = NodeList
     
     def buildGraghFromUser(self, df):
         prev = ""
@@ -203,13 +222,4 @@ class TriGraph():
             return [self.userCount+1, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
         return [self.userNum, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
 
-    def WriteGraph(self, outfileName):
-        outfileName = './corpus/' + outfileName
-        with open(outfileName, 'w') as outfile:
-            json.dump(data, outfile)
     
-    def readGraph(self, jsonfileName):
-        jsonfileName = './corpus/' + jsonfileName
-        with open(jsonfileName, 'r') as json_data:
-            d = json.load(json_data)
-        return d
