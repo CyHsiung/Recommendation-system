@@ -158,7 +158,7 @@ class TriGraph():
             pbar.update(1)
         pbar.close()                  
     def hashID(self, type, id, desire = None):
-
+        id = str(id)
         if type == 'user':
             if id not in self.users:
                 self.userCount+=1
@@ -198,8 +198,20 @@ class TriGraph():
             self.prefs[str(a)+'_'+str(b)] = 'pref_'+ str(a) + '_' + str(b) + '_' + str(self.prefCount)
         return self.prefs[id]
 
-    def buildMapping(self):
-        print('build the mapping')
+    def buildMapping(self, outfileName):
+        print('Building the mapping')
+        mapping = {'oldID':{},'newID':{}}
+        dl = [self.users, self.prefs, self.products_D, self.products_U, self.tags_D, self.tags_U]
+        for d in dl:
+            mapping['oldID'].update(d)
+            dd = dict((value, key) for key, value in d.items())
+            mapping['newID'].update(dd)
+        
+        outJsonfileName = './corpus/' + outfileName + '.json'
+        with open(outJsonfileName, 'w') as outfile:
+            json.dump(mapping, outfile)
+        return 
+        '''
         df = pd.DataFrame(columns=['orginal id', 'new id'])
         self.appendTodf(df, self.users)
         self.appendTodf(df, self.prefs)
@@ -208,14 +220,17 @@ class TriGraph():
         self.appendTodf(df, self.tags_D)
         self.appendTodf(df, self.tags_U)
         return df
-
+        '''
     def appendTodf(self, df, Dict):
+        pbar = tqdm(total=len(Dict))
         for key in Dict:
             df.loc[-1] = [key, Dict[key]]
             df.index+=1
+            pbar.update(1)
+        pbar.close()
         
     def buildNodeList(self, remove = True):
-        print("building the NodeList")
+        print("Building the NodeList")
         self.userNum = self.userCount+1
         for key in tqdm(self.dict):
             if remove and not self.dict[key]:
