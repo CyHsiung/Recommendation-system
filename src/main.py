@@ -8,7 +8,8 @@
 # 	G.buildNodeList()
 # 	return G.NodeList
 
-from BuildGraph import *
+from graphProcessing.BuildGraph import *
+from graphProcessing.ReadWrite import *
 from LR import *
 import pandas as pd
 from os.path import join
@@ -39,6 +40,17 @@ def buildGraph(corpus_dir, pref_filename, tag_filename):
 
 	return G, df_pref, df_tag, df_table
 
+def loadGraph(corpus_dir, pref_filename, tag_filename):
+	print("reference loading")
+	df_tag = readData(join(corpus_dir, tag_filename))
+	df_pref = readData(join(corpus_dir, pref_filename))
+	df_table = pd.read_csv(join(corpus_dir, 'table.csv'))
+
+
+	print("loading the graph")
+	G = readGraph('graph')
+
+	return G, df_pref, df_tag, df_table
 
 def main():
 	parser = argparse.ArgumentParser()
@@ -71,7 +83,9 @@ def main():
 
 
 
-	G, df_pref, df_tag, df_table = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName)
+	# G, df_pref, df_tag, df_table = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName)
+
+	G, df_pref, df_tag, df_table = loadGraph(args.corpus_dir, args.prefFileName, args.tagFileName)
 
 	# PPR_feature_generator(graph, tol, maxIter, beta)
 	evaluation(G, df_pref, df_tag, df_table, args.feature_type, args)

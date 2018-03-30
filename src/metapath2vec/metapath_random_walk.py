@@ -14,7 +14,7 @@ while project_dir[-3:] != 'src':
 project_dir = join(project_dir, '..')
 '''
 sys.path.append(project_dir)
-from src.BuildGraph import*
+from graphProcessing.BuildGraph import*
 corpus_dir = join(project_dir, 'corpus')
 
 def import_graph(tag_filename, pref_filename):

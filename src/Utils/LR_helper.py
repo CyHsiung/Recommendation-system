@@ -112,7 +112,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 
 
 def find_item_index(item, df_table):
-	return int(list(df_table[df_table["orginal id"] == int(item)]["new id"])[0].split("_")[-1])
+	return int(list(df_table[df_table["orginal id"] == item]["new id"])[0].split("_")[-1])
 
 def find_user_name(user_name, df_table):
 	return df_table[df_table["new id"] == user_name]['orginal id'].values[0]
