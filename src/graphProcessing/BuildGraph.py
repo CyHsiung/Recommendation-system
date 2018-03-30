@@ -199,6 +199,7 @@ class TriGraph():
         return self.prefs[id]
 
     def buildMapping(self):
+        print('build the mapping')
         df = pd.DataFrame(columns=['orginal id', 'new id'])
         self.appendTodf(df, self.users)
         self.appendTodf(df, self.prefs)
@@ -214,8 +215,9 @@ class TriGraph():
             df.index+=1
         
     def buildNodeList(self, remove = True):
+        print("building the NodeList")
         self.userNum = self.userCount+1
-        for key in self.dict:
+        for key in tqdm(self.dict):
             if remove and not self.dict[key]:
                 self.userNum -=1
                 continue
