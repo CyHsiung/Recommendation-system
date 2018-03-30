@@ -1,15 +1,18 @@
 import pandas as pd
 import json
+from tqdm import tqdm
+
 def readData(fileName):
     df = pd.read_table(fileName)
     return df
 
 #Table 1: product ID, string of tag ID
-#Table 2: user id ,prodcut id, rating
+#Table 2: user id ,product id, rating
 
 class TriGraph():
     def __init__(self, df_tag=None, df_pref=None, dict=None, userNum=None, userCount=None, 
                 prefCount=None, prodUCount=None, prodDCount=None, tagUCount=None, tagDCount=None, NodeList=None):
+        print("Initializing Graph...")
         if df_tag is not None and df_pref is not None: 
             self.dict = {}
             self.userNum = 0
@@ -46,19 +49,22 @@ class TriGraph():
             self.tags_U = None
             self.tags_D = None
             self.NodeList = NodeList
-    
+        print("Initializing Graph Done")
+
     def buildGraghFromUser(self, df):
         prev = ""
         prev_id = -1
         products = []
         count = 0
+        print('Building Users...')
+        pbar = tqdm(total=len(df.index))
         for _, row in df.iterrows():
             rating = row['rating']
             product = row['product']
             if count == 0: 
                 prev = row['user']
                 prev_id = self.hashID('user', row['user'])
-            count+=1
+            count += 1
             #print(row['user'])
             #print('P', prev)
             if row['user'] != prev:
@@ -84,7 +90,8 @@ class TriGraph():
                 products = [(product, rating)]
             else: 
                 products.append((product, rating))
-        
+            pbar.update(1)
+
         products.sort(key = lambda x: x[1], reverse=True)
         self.dict[prev_id] = []
         if products[0] != products[-1]:
@@ -98,9 +105,11 @@ class TriGraph():
                         if pref not in self.dict:
                             self.dict[pref] = [prev_id]
                         else: self.dict[pref].append(prev_id)
-    
+        pbar.close()
     def buildGraghFromProduct(self, df):
         products = []
+        print('Building Products and Tags...')
+        pbar = tqdm(total=len(df.index))
         for _, row in df.iterrows():
             product = row['product']
             products.append(product)
@@ -125,7 +134,10 @@ class TriGraph():
                     self.dict[tag_id].append(product_id_u)
                 else:
                     self.dict[tag_id] = [product_id_u] 
-                
+            pbar.update(1)
+        pbar.close()
+        print('Building Preferences...')
+        pbar = tqdm(total=len(products)-1)    
         for i in range(len(products)-1):
             for j in range(i+1, len(products)):
                 a = products[i]
@@ -143,7 +155,8 @@ class TriGraph():
                 self.dict[product_id_d].append(pref)
                 self.dict[product_id_u].append(pref)
                 self.dict[pref] = [product_id_d, product_id_u]
-                              
+            pbar.update(1)
+        pbar.close()                  
     def hashID(self, type, id, desire = None):
 
         if type == 'user':

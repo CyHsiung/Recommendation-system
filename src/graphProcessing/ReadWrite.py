@@ -4,8 +4,11 @@ from src.graphProcessing.BuildGraph import*
 def writeGraph(graph, outfileName):
     outJsonfileName = './corpus/' + outfileName + '.json'
     outCountfileName = './corpus/' + outfileName + '.count'
+    print("Writing NodeList into", outJsonfileName)
     with open(outJsonfileName, 'w') as outfile:
         json.dump(graph.NodeList, outfile)
+
+    print("Writing numbers of nodes into", outCountfileName)
     with open(outCountfileName, 'w') as outfile:
         outfile.write(str(graph.userNum))
         outfile.write('\n')
@@ -20,12 +23,16 @@ def writeGraph(graph, outfileName):
         outfile.write(str(graph.tagUCount))
         outfile.write('\n')
         outfile.write(str(graph.tagDCount))
+    print('Writing Done')
         
 def readGraph(fileName):
     jsonfileName = './corpus/' + fileName + '.json'
     countfileName = './corpus/' + fileName + '.count' 
+    print('Reading NodeList from', jsonfileName)
     with open(jsonfileName, 'r') as json_data:
         d = json.load(json_data)
+    
+    print('Reading numbers of nodes from', countfileName)
     l = []
     f = open(countfileName, 'r')
     line = f.readline()
@@ -36,4 +43,5 @@ def readGraph(fileName):
 
     graph = TriGraph(userNum=l[0], userCount=l[1], 
                 prefCount=l[2], prodUCount=l[3], prodDCount=l[4], tagUCount=l[5], tagDCount=l[6], NodeList=d)
+    print('Reading Done')
     return graph
