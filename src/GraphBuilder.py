@@ -16,12 +16,12 @@ def buildGraph(corpus_dir, pref_filename, tag_filename, graph_name):
 	G = TriGraph(df_tag, df_pref)
 	G.buildNodeList(False)
 
-	df_table = G.buildMapping()
+	G.buildMapping(graph_name+'_table')
 	
 
 	# dump table.csv
-	print("dumping the table.csv")
-	df_table.to_csv(join(corpus_dir, graph_name+'_table.csv'), index = False);
+	# print("dumping the table.csv")
+	# df_table.to_csv(join(corpus_dir, graph_name+'_table.csv'), index = False);
 
 	# dump typeMap.txt
 	print("dumping the typeMap.txt")

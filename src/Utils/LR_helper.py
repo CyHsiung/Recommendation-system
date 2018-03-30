@@ -35,12 +35,17 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 
 		# record and remove the edges
 		for i in sorted(rand_idx, reverse = True):
-			removed_edge_name = graph.NodeList[user_name]['next_pref'][i]
-			del graph.NodeList[user_name]['next_pref'][i]
-			if user_name not in removed_pre:
-				removed_pre[user_name] = [removed_edge_name]
-			else:
-				removed_pre[user_name].append(removed_edge_name)
+			try:
+				removed_edge_name = graph.NodeList[user_name]['next_pref'][i]
+				del graph.NodeList[user_name]['next_pref'][i]
+				if user_name not in removed_pre:
+					removed_pre[user_name] = [removed_edge_name]
+				else:
+					removed_pre[user_name].append(removed_edge_name)
+			except:
+				print("removing edges unknown error (didn't be solved)")
+				print("length ", length, ", max of rand_idx = ", max(rand_idx), "length of pref", len(graph.NodeList[user_name]['next_pref']))
+			
 
 
 	IDCG = []
@@ -112,10 +117,12 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 
 
 def find_item_index(item, df_table):
-	return int(list(df_table[df_table["orginal id"] == item]["new id"])[0].split("_")[-1])
+	return int(df_table["old2new"][item].split("_")[-1].split("_")[-1])
+	# return int(list(df_table[df_table["orginal id"] == item]["new id"])[0].split("_")[-1])
 
 def find_user_name(user_name, df_table):
-	return df_table[df_table["new id"] == user_name]['orginal id'].values[0]
+	return df_table["new2old"][user_name]
+	# return df_table[df_table["new id"] == user_name]['orginal id'].values[0]
 
 def DCG_calculator(rating_list):
 	res = 0

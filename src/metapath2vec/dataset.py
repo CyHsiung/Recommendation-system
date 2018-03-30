@@ -35,7 +35,6 @@ class Dataset(object):
     def parse_node_type_mapping_txt(self,node_type_mapping_txt,nodeid2index):
         #this method does not modify any class variables
         index2type={}
-        
         with open(node_type_mapping_txt) as f:
             for line in f:
                 pair = [entry for entry in line.strip().split(' ')]

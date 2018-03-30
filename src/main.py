@@ -15,40 +15,46 @@ import pandas as pd
 from os.path import join
 import os
 import argparse
+import json
+import time
+
+
 
 
 project_dir = os.path.abspath('./')
 corpus_dir = join(project_dir, 'corpus')
 
-def buildGraph(corpus_dir, pref_filename, tag_filename):
+# def buildGraph(corpus_dir, pref_filename, tag_filename):
+# 	print("reference loading")
+# 	df_tag = readData(join(corpus_dir, tag_filename))
+# 	df_pref = readData(join(corpus_dir, pref_filename))
+
+# 	print("building the graph")
+# 	G = TriGraph(df_tag, df_pref)
+# 	G.buildNodeList(False)
+
+# 	df_table = G.buildMapping()
+
+# 	# dump typeMap.txt
+# 	print("dumping the typeMap.txt")
+# 	f = open(join(corpus_dir, 'typeMap.txt'),'w')
+# 	for key in G.dict:
+# 		f.write(key + ' ' + key[:4] + '\n')
+
+
+# 	return G, df_pref, df_tag, df_table
+
+def loadGraph(corpus_dir, pref_filename, tag_filename, graph_name):
 	print("reference loading")
 	df_tag = readData(join(corpus_dir, tag_filename))
 	df_pref = readData(join(corpus_dir, pref_filename))
-
-	print("building the graph")
-	G = TriGraph(df_tag, df_pref)
-	G.buildNodeList(False)
-
-	df_table = G.buildMapping()
-
-	# dump typeMap.txt
-	print("dumping the typeMap.txt")
-	f = open(join(corpus_dir, 'typeMap.txt'),'w')
-	for key in G.dict:
-		f.write(key + ' ' + key[:4] + '\n')
+	# df_table = pd.read_csv(join(corpus_dir, 'table.csv'))
+	with open(join(corpus_dir, graph_name+'_table.json')) as fin:
+		df_table = json.load(fin)
 
 
-	return G, df_pref, df_tag, df_table
-
-def loadGraph(corpus_dir, pref_filename, tag_filename):
-	print("reference loading")
-	df_tag = readData(join(corpus_dir, tag_filename))
-	df_pref = readData(join(corpus_dir, pref_filename))
-	df_table = pd.read_csv(join(corpus_dir, 'table.csv'))
-
-
-	print("loading the graph")
-	G = readGraph('graph')
+	print("loading the graph from graph_name = ", graph_name)
+	G = readGraph(graph_name)
 
 	return G, df_pref, df_tag, df_table
 
@@ -60,6 +66,8 @@ def main():
                        help='preference file name')
 	parser.add_argument('--tagFileName', type=str, default='toy_tags.txt',
 					   help='tags file name')
+	parser.add_argument('--graph_name', type=str, default='graph',
+					   help='graph_name')
 	parser.add_argument('--corpus_dir', type=str, default='./corpus',
                        help='Data directory')
 
@@ -80,12 +88,13 @@ def main():
 
 
 	args = parser.parse_args()
-
+	# modify for multiple graph running
+	args.types = join(corpus_dir, args.graph_name+"_typeMap.txt")
 
 
 	# G, df_pref, df_tag, df_table = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName)
 
-	G, df_pref, df_tag, df_table = loadGraph(args.corpus_dir, args.prefFileName, args.tagFileName)
+	G, df_pref, df_tag, df_table = loadGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name)
 
 	# PPR_feature_generator(graph, tol, maxIter, beta)
 	evaluation(G, df_pref, df_tag, df_table, args.feature_type, args)
@@ -93,4 +102,6 @@ def main():
 
 
 if __name__ == '__main__':
+	start_time = time.time()
 	main()
+	print("--- %s seconds ---" % (time.time() - start_time))

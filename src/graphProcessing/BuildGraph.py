@@ -200,12 +200,12 @@ class TriGraph():
 
     def buildMapping(self, outfileName):
         print('Building the mapping')
-        mapping = {'oldID':{},'newID':{}}
+        mapping = {'old2new':{},'new2old':{}}
         dl = [self.users, self.prefs, self.products_D, self.products_U, self.tags_D, self.tags_U]
-        for d in dl:
-            mapping['oldID'].update(d)
+        for d in tqdm(dl):
+            mapping['old2new'].update(d)
             dd = dict((value, key) for key, value in d.items())
-            mapping['newID'].update(dd)
+            mapping['new2old'].update(dd)
         
         outJsonfileName = './corpus/' + outfileName + '.json'
         with open(outJsonfileName, 'w') as outfile:
