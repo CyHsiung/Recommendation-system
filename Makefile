@@ -1,14 +1,13 @@
-SHELL=/bin/bash
 all: preprocessing toy_extractor semi
 
 preprocessing:
 	python ./src/preprocessing.py
 
 toy_extractor:
-	python ./src/toy_extracter.py --user_num 10 --product_range 3-5
+	time python ./src/toy_extracter.py --user_num 50 --product_range 30-50
 
 build_graph:
-	python ./src/GraphBuilder.py
+	time python ./src/GraphBuilder.py --graph_name graph
 	
 semi:
 	python ./src/main.py --feature_type meta2vec

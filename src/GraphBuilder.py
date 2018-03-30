@@ -37,13 +37,15 @@ def main():
 					   help='tags file name')
 	parser.add_argument('--corpus_dir', type=str, default='./corpus',
                        help='Data directory')
+	parser.add_argument('--graph_name', type=str, default='graph',
+                       help='graph_name')
 
 
 	args = parser.parse_args()
 
 	G = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName)
 
-	writeGraph(G, 'graph')
+	writeGraph(G, args.graph_name)
 
 	
 
