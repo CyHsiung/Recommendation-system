@@ -4,8 +4,10 @@ from graphProcessing.ReadWrite import *
 import argparse
 from os.path import join
 import pandas as pd
+import time
+start_time = time.time()
 
-def buildGraph(corpus_dir, pref_filename, tag_filename):
+def buildGraph(corpus_dir, pref_filename, tag_filename, graph_name):
 	print("reference loading")
 	df_tag = pd.read_table(join(corpus_dir, tag_filename))
 	df_pref = pd.read_table(join(corpus_dir, pref_filename))
@@ -18,11 +20,11 @@ def buildGraph(corpus_dir, pref_filename, tag_filename):
 
 	# dump table.csv
 	print("dumping the table.csv")
-	df_table.to_csv(join(corpus_dir, 'table.csv'), index = False);
+	df_table.to_csv(join(corpus_dir, graph_name+'_table.csv'), index = False);
 
 	# dump typeMap.txt
 	print("dumping the typeMap.txt")
-	with open(join(corpus_dir, 'typeMap.txt'),'w') as fout:
+	with open(join(corpus_dir, graph_name+'_typeMap.txt'),'w') as fout:
 		for key in G.dict:
 			fout.write(key + ' ' + key[:4] + '\n')
 
@@ -43,7 +45,7 @@ def main():
 
 	args = parser.parse_args()
 
-	G = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName)
+	G = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name)
 
 	writeGraph(G, args.graph_name)
 
@@ -51,3 +53,4 @@ def main():
 
 if __name__ == '__main__':
 	main()
+	print("--- %s seconds ---" % (time.time() - start_time))

@@ -38,7 +38,6 @@ def toy_example_builder(user_num, product_range, tagFileName, prefFileName, corp
 		else:
 			df_toy_tag = df_toy_tag.append(df_tag[df_tag['product'] == product])
 
-
 	df_toy_tag.to_csv(join(corpus_dir, output_header + '_tags.txt'), sep='\t', index = False)
 	df_toy_pre.to_csv(join(corpus_dir, output_header + '_preference.txt'), sep='\t', index = False)
 
