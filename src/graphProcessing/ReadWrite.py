@@ -1,5 +1,5 @@
 import json
-from src.graphProcessing.BuildGraph import*
+from graphProcessing.BuildGraph import*
 
 def writeGraph(graph, outfileName):
     outJsonfileName = './corpus/' + outfileName + '.json'

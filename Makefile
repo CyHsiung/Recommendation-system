@@ -7,8 +7,9 @@ preprocessing:
 toy_extractor:
 	python ./src/toy_extracter.py --user_num 10 --product_range 3-5
 
-# build_graph:
-
+build_graph:
+	python ./src/GraphBuilder.py
+	
 semi:
 	python ./src/main.py --feature_type meta2vec
 
