@@ -17,6 +17,7 @@ def buildGraph(corpus_dir, pref_filename, tag_filename, graph_name):
 	G.buildNodeList(False)
 
 	df_table = G.buildMapping()
+	
 
 	# dump table.csv
 	print("dumping the table.csv")
