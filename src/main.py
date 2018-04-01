@@ -91,12 +91,8 @@ def main():
 	# modify for multiple graph running
 	args.types = join(corpus_dir, args.graph_name+"_typeMap.txt")
 
-
-	# G, df_pref, df_tag, df_table = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName)
-
 	G, df_pref, df_tag, df_table = loadGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name)
 
-	# PPR_feature_generator(graph, tol, maxIter, beta)
 	evaluation(G, df_pref, df_tag, df_table, args.feature_type, args)
 
 

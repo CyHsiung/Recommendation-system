@@ -35,17 +35,18 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 
 	# def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0.3, drop_pre_rate = 0.3):
 	print("removing edges from graph")
-	G, removed_pre, IDCG, item_num = removed_edge(G, df_pref, df_table, 1, 0.3, 0.3)
+	G, removed_pre, IDCG, item_num = removed_edge(G, df_pref, df_table, 1, 0.3, 0.1)
 
 	if feature_type == 'PPR':
 		print("PPR feature generating")
-		user_feature, item_feature = PPR_feature_generator(G, 1e-8, 1e4, 0.85)
+		user_feature, item_feature = PPR_feature_generator(G, 1e-8, 100, 0.85)
 		# user_feature, item_feature = np.zeros((10, 502)), np.zeros((36, 502))
 	elif feature_type == 'meta2vec':
 		n = G.getCount(False)
 
 		print("meta2vec feature generating")
 		user_feature, item_feature, _ = meta2vec(nodeById = G.NodeList, userNum = n[0], prodNum = n[2], args = args)
+		# user_feature, item_feature = np.zeros((10, 100)), np.zeros((376, 200))
 
 	print('user shape:', user_feature.shape, 'item shape:', item_feature.shape)
 

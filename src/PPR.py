@@ -16,7 +16,7 @@ def buildAMatrix(graph):
 
 	M = lil_matrix((n[-1], n[-1]))
 
-	for key in graph.NodeList:
+	for key in tqdm(graph.NodeList):
 		row_idx = getIndex(key, n)
 		node = graph.NodeList[key]
 		
