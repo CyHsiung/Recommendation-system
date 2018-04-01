@@ -12,6 +12,7 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 	# graph = G.copy()			# not work
 	user_num = graph.getCount()[0]
 	
+	np.random.seed(42)
 
 	edge_num = []
 	for idx in range(user_num):
@@ -31,7 +32,10 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 		
 		# random select a edge to remove
 		length = len(graph.NodeList[user_name]['next_pref'])
-		rand_idx = list(np.random.random_integers(0, length-1, pre_drop_count))
+
+		# bug fix 
+		# rand_idx = list(np.random.random_integers(0, length-1, pre_drop_count))
+		rand_idx = list(np.random.choice(length, pre_drop_count, replace = False))
 
 		# record and remove the edges
 		for i in sorted(rand_idx, reverse = True):
@@ -63,7 +67,7 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 			real_idx = find_item_index(item, df_table)
 			real_user_name = find_user_name(user, df_table)
 			rate = df_pref[(df_pref['user'] == real_user_name) & (df_pref['product'] == int(item))]['rating'].values[0]
-			rating_list.append(float(rate)/5)
+			rating_list.append(float(rate))
 
 		# DCG for this item
 		IDCG.append(DCG_calculator(sorted(rating_list, reverse = True)))
@@ -91,7 +95,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 			rate = df_pref[(df_pref['user'] == real_user_name) & (df_pref['product'] == int(item))]['rating'].values[0]
 			# print("user_feature", user_feature,)
 			x_train.append(np.concatenate([user_feature[idx, :].flatten(), item_feature[real_idx, :].flatten()]))
-			y_train.append(float(rate)/5)
+			y_train.append(float(rate))
 
 
 	# Generating testing data
@@ -110,7 +114,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 			real_user_name = find_user_name(user_name, df_table)
 			rate = df_pref[(df_pref['user'] == real_user_name) & (df_pref['product'] == int(item))]['rating'].values[0]
 			x_test.append(np.concatenate([user_feature[idx, :].flatten(), item_feature[real_idx, :].flatten()]))
-			y_test.append(float(rate)/5)
+			y_test.append(float(rate))
 	
 	print(np.asarray(x_train).shape, np.asarray(y_train).shape, np.asarray(x_test).shape, np.asarray(y_test).shape)
 	print(removed_pre)

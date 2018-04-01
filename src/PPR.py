@@ -12,12 +12,7 @@ def buildAMatrix(graph):
 	# print(n)
 
 	n = np.cumsum(n)
-	# print(n)
-
-	M = lil_matrix((n[-1], n[-1]))
-
-	for key in tqdm(graph.NodeList):
-		row_idx = getIndex(key, n)
+	# print(n)		row_idx = getIndex(key, n)
 		node = graph.NodeList[key]
 		
 		key_list = []
@@ -55,6 +50,11 @@ def getIndex(key,n):
 
 
 	idx += int(key.split("_")[-1])
+
+
+	M = lil_matrix((n[-1], n[-1]))
+
+	for key in tqdm(graph.NodeList):
 
 	return idx
 

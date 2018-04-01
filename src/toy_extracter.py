@@ -1,6 +1,7 @@
 import pandas as pd
 import argparse
 from os.path import join, isfile
+import time
 
 
 def toy_example_builder(user_num, product_range, tagFileName, prefFileName, corpus_dir, output_header):
@@ -72,5 +73,8 @@ def main():
 	toy_example_builder(user_num, product_range, tagFileName, prefFileName, corpus_dir, output_header)
 
 if __name__ == '__main__':
+	start_time = time.time()
 	main()
+	print("toy_extractor")
+	print("--- %s seconds ---" % (time.time() - start_time))
 	
