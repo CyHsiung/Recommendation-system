@@ -71,6 +71,14 @@ def main():
 	parser.add_argument('--corpus_dir', type=str, default='./corpus',
                        help='Data directory')
 
+
+	####### PPR-argmument
+	parser.add_argument('--maxIter', type=int, default=10000,
+					   help='tags file name')
+	parser.add_argument('--tol', type=float, default=1e-8,
+					   help='graph_name')
+
+
 	####### semi-argmument
 	parser.add_argument('--walks',type=str,default = join(corpus_dir, 'random_walk.txt'), help='text file that has a random walk in each line. A random walk is just a seaquence of node ids separated by a space.')
 	parser.add_argument('--types',type=str,default = join(corpus_dir, 'typeMap.txt'), help='text file that has node types. each line is "node id <space> node type"')
@@ -84,6 +92,8 @@ def main():
 	parser.add_argument('--negative-samples',default = 5,type=int,help='number of negative samples')
 	parser.add_argument('--care-type',default = 0,type=int,help='care type or not. if 1, it cares (i.e. heterogeneous negative sampling). If 0, it does not care (i.e. normal negative sampling). ')
 	parser.add_argument('--window',default = 3,type=int,help='context window size')
+
+	parser.add_argument('--stepInEachPath',default = 20,type=int,help='step in each random walk path')
 
 
 

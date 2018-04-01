@@ -39,7 +39,7 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 
 	if feature_type == 'PPR':
 		print("PPR feature generating")
-		user_feature, item_feature = PPR_feature_generator(G, 1e-8, 100, 0.85)
+		user_feature, item_feature = PPR_feature_generator(G, args.tol, args.maxIter, 0.85)
 		# user_feature, item_feature = np.zeros((10, 502)), np.zeros((36, 502))
 	elif feature_type == 'meta2vec':
 		n = G.getCount(False)

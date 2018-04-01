@@ -17,7 +17,7 @@ from src.metapath2vec.extract import output_numpy
 
 corpus_dir = join(project_dir, 'corpus')
 def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, args = None): 
-    stepInEachPath = 20
+    stepInEachPath = args.stepInEachPath
     embedDim = 100
     writeFileName = 'random_walk.txt'
     meta_path_format = ['user', 'pref', 'prod', 'tags', 'prod', 'pref']
