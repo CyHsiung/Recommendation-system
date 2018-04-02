@@ -34,7 +34,7 @@ def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = Non
     # args = parse_args(embedDim, nEpoch, windowSize)
     main(args)
     # output two embed matrix and the miss user list
-    userEmbed, prodEmbed, missingUser = output_numpy(userNum, prodNum, embedDim)
+    userEmbed, prodEmbed, missingUser = output_numpy(userNum, prodNum, embedDim, args.log)
     return userEmbed, prodEmbed, missingUser
 
 if __name__ == '__main__':

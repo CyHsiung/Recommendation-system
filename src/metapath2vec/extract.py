@@ -18,12 +18,12 @@ sys.path.append(project_dir)
 from graphProcessing.BuildGraph import*
 corpus_dir = join(project_dir, 'corpus')
 
-def output_numpy(userNum, prodNum, embedDim):
+def output_numpy(userNum, prodNum, embedDim, log_dir = join(corpus_dir, "log")):
     # read dictionary form json file
-    index2nodeid = json.load(open(join(corpus_dir, "log/index2nodeid.json")))
+    index2nodeid = json.load(open(join(log_dir, "index2nodeid.json")))
     index2nodeid = {int(k):v for k,v in index2nodeid.items()}
     nodeid2index = {v:int(k) for k,v in index2nodeid.items()}
-    node_embeddings = np.load(join(corpus_dir, "log/node_embeddings.npz"))['arr_0']
+    node_embeddings = np.load(join(log_dir, "node_embeddings.npz"))['arr_0']
 
     # start
     userEmbed = np.zeros((userNum, embedDim))
