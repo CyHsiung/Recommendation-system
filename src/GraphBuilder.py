@@ -59,7 +59,7 @@ def main():
 
 	G = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name, args.graph_type)
 
-	writeGraph(G, args.graph_name)
+	writeGraph(G, args.graph_name, args.graph_type)
 
 	
 

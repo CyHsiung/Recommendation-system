@@ -45,7 +45,7 @@ corpus_dir = join(project_dir, 'corpus')
 
 # 	return G, df_pref, df_tag, df_table
 
-def loadGraph(corpus_dir, pref_filename, tag_filename, graph_name):
+def loadGraph(corpus_dir, pref_filename, tag_filename, graph_name, graph_type):
 	print("reference loading")
 	df_tag = readData(join(corpus_dir, tag_filename))
 	df_pref = readData(join(corpus_dir, pref_filename))
@@ -55,7 +55,7 @@ def loadGraph(corpus_dir, pref_filename, tag_filename, graph_name):
 
 
 	print("loading the graph from graph_name = ", graph_name)
-	G = readGraph(graph_name)
+	G = readGraph(graph_name, graph_type)
 
 	return G, df_pref, df_tag, df_table
 
@@ -69,6 +69,8 @@ def main():
 					   help='tags file name')
 	parser.add_argument('--graph_name', type=str, default='graph',
 					   help='graph_name')
+	parser.add_argument('--graph_type', type=str, default='w',
+                       help='graph_type')
 	parser.add_argument('--corpus_dir', type=str, default='./corpus',
                        help='Data directory')
 
@@ -102,7 +104,11 @@ def main():
 	# modify for multiple graph running
 	args.types = join(corpus_dir, args.graph_name+"_typeMap.txt")
 
-	G, df_pref, df_tag, df_table = loadGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name)
+	G, df_pref, df_tag, df_table = loadGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name, args.graph_type)
+
+	for key, value in df_table['old2new']['item_U'].items():
+		print(key, value)
+
 
 	evaluation(G, df_pref, df_tag, df_table, args.feature_type, args)
 

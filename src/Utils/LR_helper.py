@@ -7,16 +7,21 @@ from collections import OrderedDict
 # drop_user_rate = 0.3			# perform delete on these ratio of candidates (candidate / total usesr)
 # drop_pre_rate = 0.3				# the ratio for drop the edge
 
-def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0.3, drop_pre_rate = 0.3):
+def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0.3, drop_pre_rate = 0.3, graph_type = 'w'):
 	# copy an object for not modify original graph
 	# graph = G.copy()			# not work
+	if graph_type == 'w':
+		next_node = 'next_pref'
+	else:
+		next_node = 'next_prod'
+
 	user_num = graph.getCount()[0]
 	
 	np.random.seed(42)
 
 	edge_num = []
 	for idx in range(user_num):
-		pre_cnt = len(graph.NodeList["user_"+str(idx)]['next_pref'])
+		pre_cnt = len(graph.NodeList["user_"+str(idx)][next_node])
 		if pre_cnt >= drop_pre_thr:
 			edge_num.append((pre_cnt, idx))
 
@@ -31,7 +36,7 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 		pre_drop_count = int(drop_pre_rate * cnt)
 		
 		# random select a edge to remove
-		length = len(graph.NodeList[user_name]['next_pref'])
+		length = len(graph.NodeList[user_name][next_node])
 
 		# bug fix 
 		# rand_idx = list(np.random.random_integers(0, length-1, pre_drop_count))
@@ -40,15 +45,15 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 		# record and remove the edges
 		for i in sorted(rand_idx, reverse = True):
 			try:
-				removed_edge_name = graph.NodeList[user_name]['next_pref'][i]
-				del graph.NodeList[user_name]['next_pref'][i]
+				removed_edge_name = graph.NodeList[user_name][next_node][i]
+				del graph.NodeList[user_name][next_node][i]
 				if user_name not in removed_pre:
 					removed_pre[user_name] = [removed_edge_name]
 				else:
 					removed_pre[user_name].append(removed_edge_name)
 			except:
 				print("removing edges unknown error (have not be solved)")
-				print("length ", length, ", max of rand_idx = ", max(rand_idx), "length of pref", len(graph.NodeList[user_name]['next_pref']))
+				print("length ", length, ", max of rand_idx = ", max(rand_idx), "length of pref", len(graph.NodeList[user_name][next_node]))
 			
 
 
@@ -56,10 +61,21 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 	item_num = []
 	for user in removed_pre.keys():
 		item_set = set()
+		
 		for preference in removed_pre[user]:
-			line = preference.split("_")
-			item_set.add(line[1])
-			item_set.add(line[2])
+			if graph_type == 'w':
+				line = preference.split("_")
+				item_set.add(line[1])
+				item_set.add(line[2])
+			else:
+				try:
+					item = df_table['new2old']['item_U'][preference]
+				except:
+					item = df_table['new2old']['item_D'][preference]
+				item_set.add(str(item))
+
+		print('item_set')
+		print(item_set)
 
 		rating_list = []
 
@@ -76,7 +92,12 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 		# print("IDCG rateinglist :", sorted(rating_list, reverse = True))
 	return graph, removed_pre, IDCG, item_num
 
-def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_table):
+def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_table, graph_type):
+	if graph_type == 'w':
+		next_node = 'next_pref'
+	else:
+		next_node = 'next_prod'
+
 	# Generating training data
 	print("Generating training data !!!!")
 	user_num = graph.getCount(False)[0]			# Still getting confuse
@@ -84,10 +105,21 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 	for idx in range(user_num):
 		user_name = "user_"+str(idx)
 		item_set = set()
-		for pref in graph.NodeList[user_name]['next_pref']:
-			line = pref.split("_")
-			item_set.add(line[1])
-			item_set.add(line[2])
+		for pref in graph.NodeList[user_name][next_node]:
+			# line = pref.split("_")
+			# item_set.add(line[1])
+			# item_set.add(line[2])
+			if graph_type == 'w':
+				line = pref.split("_")
+				item_set.add(line[1])
+				item_set.add(line[2])
+			else:
+				try:
+					item = df_table['new2old']['item_U'][pref]
+				except:
+					item = df_table['new2old']['item_D'][pref]
+				item_set.add(str(item))
+
 
 		for item in item_set:
 			real_idx = find_item_index(item, df_table)
@@ -105,9 +137,19 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 	for user_name in removed_pre.keys():
 		item_set = set()
 		for pref in removed_pre[user_name]:
-			line = pref.split("_")
-			item_set.add(line[1])
-			item_set.add(line[2])
+			# line = pref.split("_")
+			# item_set.add(line[1])
+			# item_set.add(line[2])
+			if graph_type == 'w':
+				line = pref.split("_")
+				item_set.add(line[1])
+				item_set.add(line[2])
+			else:
+				try:
+					item = df_table['new2old']['item_U'][pref]
+				except:
+					item = df_table['new2old']['item_D'][pref]
+				item_set.add(str(item))
 
 		for item in item_set:
 			real_idx = find_item_index(item, df_table)
@@ -122,6 +164,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 
 
 def find_item_index(item, df_table):
+	print('item : ', item)
 	return int(df_table["old2new"]['item_U'][item].split("_")[-1])
 	# return int(list(df_table[df_table["orginal id"] == item]["new id"])[0].split("_")[-1])
 

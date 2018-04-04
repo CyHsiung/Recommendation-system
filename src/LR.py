@@ -35,11 +35,11 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 
 	# def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0.3, drop_pre_rate = 0.3):
 	print("removing edges from graph")
-	G, removed_pre, IDCG, item_num = removed_edge(G, df_pref, df_table, 1, 0.3, 0.1)
+	G, removed_pre, IDCG, item_num = removed_edge(G, df_pref, df_table, 1, 0.3, 0.1, args.graph_type)
 
 	if feature_type == 'PPR':
 		print("PPR feature generating")
-		user_feature, item_feature = PPR_feature_generator(G, args.tol, args.maxIter, 0.85)
+		user_feature, item_feature = PPR_feature_generator(G, args.tol, args.maxIter, 0.85, args.graph_type)
 		# user_feature, item_feature = np.zeros((10, 502)), np.zeros((36, 502))
 	elif feature_type == 'meta2vec':
 		n = G.getCount(False)
@@ -55,7 +55,7 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 	
 
 	print("generating training data")
-	x_train, y_train, x_test, y_test = generate_data(user_feature, item_feature, G, removed_pre, df_pref, df_table)
+	x_train, y_train, x_test, y_test = generate_data(user_feature, item_feature, G, removed_pre, df_pref, df_table, args.graph_type)
 
 
 	print("training the model")

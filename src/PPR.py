@@ -4,12 +4,14 @@ from numpy import array
 from scipy.sparse.linalg import norm
 from tqdm import tqdm
 
-def buildAMatrix(graph):
+def buildAMatrix(graph, graph_type):
 
 	n = graph.getCount()
 
-	# print("the number of nodes in six categories")
-	# print(n)
+	if graph_type == 'w':
+		type_list = ['next_user', 'next_pref', 'next_prod', 'next_tags']
+	else:
+		type_list = ['next_user', 'next_prod', 'next_tags']
 
 	n = np.cumsum(n)
 	# print(n)
@@ -22,7 +24,8 @@ def buildAMatrix(graph):
 		
 		key_list = []
 		col_idx = []
-		for type_next in ['next_user', 'next_pref', 'next_prod', 'next_tags']:
+
+		for type_next in type_list:
 			key_list.extend(node[type_next])
 
 		for key2 in key_list:
@@ -85,9 +88,9 @@ def feature_getter(r, n):
 
 	return res
 
-def PPR_feature_generator(graph, tol, maxIter, beta):
+def PPR_feature_generator(graph, tol, maxIter, beta, graph_type):
 	print("creating sparse matrix")
-	M = buildAMatrix(graph)
+	M = buildAMatrix(graph, graph_type)
 	
 	n = graph.getCount()
 
