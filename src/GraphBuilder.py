@@ -1,5 +1,6 @@
 from graphProcessing.BuildGraph import *
 from graphProcessing.ReadWrite import *
+from graphProcessing.BuildGraphWoPref import *
 
 import argparse
 from os.path import join
@@ -7,13 +8,21 @@ import pandas as pd
 import time
 start_time = time.time()
 
-def buildGraph(corpus_dir, pref_filename, tag_filename, graph_name):
+def buildGraph(corpus_dir, pref_filename, tag_filename, graph_name, graph_type):
 	print("reference loading")
 	df_tag = pd.read_table(join(corpus_dir, tag_filename))
 	df_pref = pd.read_table(join(corpus_dir, pref_filename))
 
-	print("building the graph")
-	G = TriGraph(df_tag, df_pref)
+	if graph_type == 'w':
+		print("building the graph")
+		G = TriGraph(df_tag, df_pref)
+	elif graph_type == 'w/o':
+		print("building the graph w/o preference part")
+		G = TriGraphWoPref(df_tag, df_pref)
+	else:
+		print("graph_type error (input should be w or w/o)")
+		print("right now graph_type is :", graph_type)
+
 	G.buildNodeList(False)
 
 	G.buildMapping(graph_name+'_table')
@@ -42,11 +51,13 @@ def main():
                        help='Data directory')
 	parser.add_argument('--graph_name', type=str, default='graph',
                        help='graph_name')
+	parser.add_argument('--graph_type', type=str, default='w',
+                       help='graph_type')
 
 
 	args = parser.parse_args()
 
-	G = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name)
+	G = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name, args.graph_type)
 
 	writeGraph(G, args.graph_name)
 

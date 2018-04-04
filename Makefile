@@ -7,7 +7,7 @@ toy_extractor:
 	python ./src/toy_extracter.py --user_num 10 --product_range 30-50
 
 build_graph:
-	python ./src/GraphBuilder.py --graph_name graph
+	python ./src/GraphBuilder.py --graph_name graph --graph_type w/o
 	
 semi:
 	python ./src/main.py --feature_type meta2vec --graph_name graph --epochs 10 --window 5 --negative-samples 10 
