@@ -232,7 +232,7 @@ class TriGraphWoPref():
     
     def getCount(self, remove = True):
         if not remove:
-            return [self.userCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
-        return [self.userNum, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
+            return [self.userCount+1, 0, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
+        return [self.userNum, 0, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
 
     
