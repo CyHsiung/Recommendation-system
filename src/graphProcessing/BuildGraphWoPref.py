@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 class TriGraphWoPref():
     def __init__(self, df_tag=None, df_pref=None, dict=None, userNum=None, userCount=None, 
-                prefCount=None, prodUCount=None, prodDCount=None, tagUCount=None, tagDCount=None, NodeList=None):
+                 prodUCount=None, prodDCount=None, tagUCount=None, tagDCount=None, NodeList=None):
         print("Initializing Graph...")
         if df_tag is not None and df_pref is not None: 
             self.dict = {}
@@ -142,29 +142,7 @@ class TriGraphWoPref():
                     self.dict[tag_id] = [product_id_u] 
             pbar.update(1)
         pbar.close()
-        '''
-        print('Building Preferences...')
-        pbar = tqdm(total=len(products)-1)    
-        for i in range(len(products)-1):
-            for j in range(i+1, len(products)):
-                a = products[i]
-                b = products[j]
-                pref = self.compare(a,b)
-                product_id_d = self.hashID('product', a, 'D')
-                product_id_u = self.hashID('product', b, 'U')
-                self.dict[product_id_d].append(pref)
-                self.dict[product_id_u].append(pref)
-                self.dict[pref] = [product_id_d, product_id_u]
-
-                pref = self.compare(b,a)
-                product_id_d = self.hashID('product', b, 'D')
-                product_id_u = self.hashID('product', a, 'U')
-                self.dict[product_id_d].append(pref)
-                self.dict[product_id_u].append(pref)
-                self.dict[pref] = [product_id_d, product_id_u]
-            pbar.update(1)
-        pbar.close()
-        '''                  
+                   
     def hashID(self, type, id, desire = None):
 
         if type == 'user':
@@ -203,15 +181,14 @@ class TriGraphWoPref():
         print('Building the mapping')
         mapping = {'old2new':{},'new2old':{}}
         dl = [self.users, self.products_D, self.products_U, self.tags_D, self.tags_U]
-        for d in tqdm(dl):
-            mapping['old2new'].update(d)
-            dd = dict((value, key) for key, value in d.items())
-            mapping['new2old'].update(dd)
-        
+        for idx, name in enumerate(['user', 'item_D', 'item_U', 'tag_D', 'tag_U' ]):
+            mapping['old2new'][name] = dl[idx]
+            dd = dict((value, key) for key, value in dl[idx].items())
+            mapping['new2old'][name] = dd
         outJsonfileName = './corpus/' + outfileName + '.json'
         with open(outJsonfileName, 'w') as outfile:
             json.dump(mapping, outfile)
-        return 
+        return  
             
     def buildNodeList(self, remove = True):
         print("Building the NodeList")

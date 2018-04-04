@@ -1,7 +1,8 @@
 import json
-from graphProcessing.BuildGraph import*
+from src.graphProcessing.BuildGraph import*
+from src.graphProcessing.BuildGraphWoPref import*
 
-def writeGraph(graph, outfileName):
+def writeGraph(graph, outfileName, graphType):
     outJsonfileName = './corpus/' + outfileName + '.json'
     outCountfileName = './corpus/' + outfileName + '.count'
     print("Writing NodeList into", outJsonfileName)
@@ -14,7 +15,9 @@ def writeGraph(graph, outfileName):
         outfile.write('\n')
         outfile.write(str(graph.userCount))
         outfile.write('\n')
-        outfile.write(str(graph.prefCount))
+        if graphType == "w":
+            outfile.write(str(graph.prefCount))
+        else: outfile.write('0')
         outfile.write('\n')
         outfile.write(str(graph.prodUCount))
         outfile.write('\n')
@@ -25,7 +28,7 @@ def writeGraph(graph, outfileName):
         outfile.write(str(graph.tagDCount))
     print('Writing Done')
         
-def readGraph(fileName):
+def readGraph(fileName, graphType):
     jsonfileName = './corpus/' + fileName + '.json'
     countfileName = './corpus/' + fileName + '.count' 
     print('Reading NodeList from', jsonfileName)
@@ -40,8 +43,11 @@ def readGraph(fileName):
         line=line.strip().split()
         l.append(int(line[0]))
         line = f.readline()
-
-    graph = TriGraph(userNum=l[0], userCount=l[1], 
-                prefCount=l[2], prodUCount=l[3], prodDCount=l[4], tagUCount=l[5], tagDCount=l[6], NodeList=d)
+    if graphType == 'w':
+        graph = TriGraph(userNum=l[0], userCount=l[1], 
+                    prefCount=l[2], prodUCount=l[3], prodDCount=l[4], tagUCount=l[5], tagDCount=l[6], NodeList=d)
+    else:
+        graph = TriGraphWoPref(userNum=l[0], userCount=l[1], 
+                    prodUCount=l[3], prodDCount=l[4], tagUCount=l[5], tagDCount=l[6], NodeList=d)
     print('Reading Done')
     return graph
