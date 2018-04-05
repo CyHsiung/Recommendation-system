@@ -20,7 +20,11 @@ def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = Non
     stepInEachPath = args.stepInEachPath
     embedDim = 100
     writeFileName = 'random_walk.txt'
-    meta_path_format = ['user', 'pref', 'prod', 'tags', 'prod', 'pref']
+    if args.graph_type == 'w':
+        meta_path_format = ['user', 'pref', 'prod', 'tags', 'prod', 'pref']
+    else:
+        meta_path_format = ['user', 'prod', 'tags', 'prod']
+        
     if not tag_fileName:
         tag_fileName = join(project_dir, 'corpus/toy_tags.txt')
     if not pref_fileName:

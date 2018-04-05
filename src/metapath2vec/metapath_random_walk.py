@@ -41,7 +41,7 @@ def create_path(num, catagory, stepInEachPath, f, nodeById, meta_path_format):
         startKey = catagory + '_' + str(i)
         if startKey not in nodeById:
             continue
-        # curNode is a dictionary with:
+        # curNode is a dictionary with key:
         # Id, Type, next_user, next_pref, next_prod, next_tags
         curNode = nodeById[startKey]
         # type of start node index in meta_path_format
@@ -51,12 +51,14 @@ def create_path(num, catagory, stepInEachPath, f, nodeById, meta_path_format):
         for j in range(stepInEachPath - 1):
             nextTypeId = (j + idBias + 1) % len(meta_path_format)
             nextType = meta_path_format[nextTypeId]
+            # Exist non-coming neighbor with the correspondent type for metapath scheme -> matapth random walk
             if curNode['next_' + nextType]: 
                 nextId = random.choice(curNode['next_' + nextType])
                 if nextId == curNode['Id'] and len(curNode['next_' + nextType]) == 1:
                     break
                 while nextId == curNode['Id']:
                     nextId = random.choice(curNode["next_" + nextType])
+            # No non-coming neighbor with the correspondent type for metapath scheme -> ordinary random walk
             else:
                 candidate = []
                 for k in curNode:
