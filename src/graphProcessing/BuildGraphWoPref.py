@@ -69,6 +69,21 @@ class TriGraphWoPref():
                 products.sort(key = lambda x: x[1], reverse=True)
                 self.dict[prev_id] = []
                 if products[0] != products[-1]: 
+                    rating_mean = sum([pair[1] for pair in products])/len(products)
+                    for item in products:
+                        if item[1] > rating_mean:
+                            product_id_d = self.hashID('product', item[0], 'D')
+                            self.dict[prev_id].append(product_id_d)
+                            if product_id_d not in self.dict:
+                                self.dict[product_id_d] = [prev_id]
+                            else: self.dict[product_id_d].append(prev_id)
+                        elif item[1] < rating_mean:
+                            product_id_u = self.hashID('product', item[0], 'U')
+                            self.dict[prev_id].append(product_id_u)
+                            if product_id_u not in self.dict:
+                                self.dict[product_id_u] = [prev_id]
+                            else: self.dict[product_id_u].append(prev_id)
+                    '''
                     for i in range(len(products)-1):
                         for j in range(i+1, len(products)):
                             a = products[i][0]
@@ -84,7 +99,7 @@ class TriGraphWoPref():
                                 if product_id_u not in self.dict:
                                     self.dict[product_id_u] = [prev_id]
                                 else: self.dict[product_id_u].append(prev_id)
-                    
+                    '''
                 #Start new user
                 prev = row['user']
                 prev_id = self.hashID('user', row['user'])
@@ -93,9 +108,25 @@ class TriGraphWoPref():
                 products.append((product, rating))
             pbar.update(1)
         pbar.close()
+
         products.sort(key = lambda x: x[1], reverse=True)
         self.dict[prev_id] = []
         if products[0] != products[-1]:
+            rating_mean = sum([pair[1] for pair in products])/len(products)
+            for item in products:
+                if item[1] > rating_mean:
+                    product_id_d = self.hashID('product', item[0], 'D')
+                    self.dict[prev_id].append(product_id_d)
+                    if product_id_d not in self.dict:
+                        self.dict[product_id_d] = [prev_id]
+                    else: self.dict[product_id_d].append(prev_id)
+                elif item[1] < rating_mean:
+                    product_id_u = self.hashID('product', item[0], 'U')
+                    self.dict[prev_id].append(product_id_u)
+                    if product_id_u not in self.dict:
+                        self.dict[product_id_u] = [prev_id]
+                    else: self.dict[product_id_u].append(prev_id)
+            '''
             for i in range(len(products)-1):
                 for j in range(i+1, len(products)):
                     a = products[i][0]
@@ -111,7 +142,7 @@ class TriGraphWoPref():
                         if product_id_u not in self.dict:
                             self.dict[product_id_u] = [prev_id]
                         else: self.dict[product_id_u].append(prev_id)
-        
+            '''
     def buildGraghFromProduct(self, df):
         products = []
         print('Building Products and Tags...')
