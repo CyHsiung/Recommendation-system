@@ -11,7 +11,7 @@ def readData(fileName):
 
 class TriGraph():
     def __init__(self, df_tag=None, df_pref=None, dict=None, userNum=None, userCount=None, 
-                prefCount=None, prodUCount=None, prodDCount=None, tagUCount=None, tagDCount=None, NodeList=None):
+                prefCount=None, prodUCount=None, prodDCount=None, tagUCount=None, tagDCount=None, NodeList=None, ifDense=True):
         print("Initializing Graph...")
         if df_tag is not None and df_pref is not None: 
             self.dict = {}
@@ -30,8 +30,8 @@ class TriGraph():
             self.tags_U = {}
             self.tags_D = {}
             self.NodeList = {}
-            self.buildGraghFromProduct(df_tag)
-            self.buildGraghFromUser(df_pref)
+            self.buildGraghFromProduct(df_tag,ifDense)
+            self.buildGraghFromUser(df_pref,ifDense)
         else:
             self.dict = None
             self.userNum = userNum
@@ -51,7 +51,7 @@ class TriGraph():
             self.NodeList = NodeList
         print("Initializing Graph Done")
 
-    def buildGraghFromUser(self, df):
+    def buildGraghFromUser(self, df, ifDense):
         prev = ""
         prev_id = -1
         products = []
@@ -91,7 +91,7 @@ class TriGraph():
             else: 
                 products.append((product, rating))
             pbar.update(1)
-
+        pbar.close()
         products.sort(key = lambda x: x[1], reverse=True)
         self.dict[prev_id] = []
         if products[0] != products[-1]:
@@ -105,8 +105,17 @@ class TriGraph():
                         if pref not in self.dict:
                             self.dict[pref] = [prev_id]
                         else: self.dict[pref].append(prev_id)
-        pbar.close()
-    def buildGraghFromProduct(self, df):
+        if not ifDense:
+            for key, val in self.prefs.items():
+                a, b = key.split('_') 
+                product_id_d = self.hashID('product', a, 'D')
+                product_id_u = self.hashID('product', b, 'U')
+                self.dict[val].append(product_id_d)
+                self.dict[val].append(product_id_u)
+                self.dict[product_id_d].append(val)
+                self.dict[product_id_u].append(val)
+
+    def buildGraghFromProduct(self, df, ifDense):
         products = []
         print('Building Products and Tags...')
         pbar = tqdm(total=len(df.index))
@@ -136,6 +145,8 @@ class TriGraph():
                     self.dict[tag_id] = [product_id_u] 
             pbar.update(1)
         pbar.close()
+        if not ifDense: return #Stop building if sparse graph is desired
+
         print('Building Preferences...')
         pbar = tqdm(total=len(products)-1)    
         for i in range(len(products)-1):
