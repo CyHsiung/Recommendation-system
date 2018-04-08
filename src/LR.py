@@ -67,11 +67,15 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 	offset = 0
 	DCG = []
 	for item_per_user in item_num:
-		y_user = predict[offset:offset+item_per_user]							# extract user's data
-		rate_user = y_test[offset:offset+item_per_user]
+		y_user = predict[offset:offset + item_per_user]							# extract user's data
+		
+		if args.graph_type == 'w':
+			rate_user = y_test[0][offset:offset + item_per_user]
+		else:
+			rate_user = y_test[1][offset:offset + item_per_user]
 
 		# Find the order for these
-		idx_sorted = sorted(range(len(y_user)), key = lambda i:-y_user[i])		# find the order 
+		idx_sorted = sorted(range(len(y_user)), key = lambda i: -y_user[i])		# find the order 
 		rate_list = rate_user[idx_sorted]										# find the rate order
 		DCG.append(DCG_calculator(rate_list))									# find the DCG of this user
 		offset += item_per_user													# update offset
