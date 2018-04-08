@@ -130,7 +130,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 				real_user_name = find_user_name(user_name, df_table)
 				rate = df_pref[(df_pref['user'] == real_user_name) & (df_pref['product'] == int(item))]['rating'].values[0]
 				x_test.append(np.concatenate([user_feature[idx, :].flatten(), item_feature[real_idx, :].flatten()]))
-				y_train.append(float(rate))
+				y_test.append(float(rate))
 
 	else:
 		print("generating data (w/o preference)")
@@ -151,7 +151,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 				except:
 					item = df_table['new2old']['item_D'][pref]
 				item_set.add(str(item))
-
+# 
 			for item in item_set:
 				real_idx = find_item_index(item, df_table)
 				real_user_name = find_user_name(user_name, df_table)
@@ -182,7 +182,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 				original_label.append(float(rate))
 
 	print(np.asarray(x_train).shape, np.asarray(y_train).shape, np.asarray(x_test).shape, np.asarray(y_test).shape)
-	print(removed_pre)
+	# print(removed_pre)
 
 	return np.asarray(x_train), np.asarray(y_train), np.asarray(x_test), [np.asarray(y_test), np.asarray(original_label)]
 

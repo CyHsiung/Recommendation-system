@@ -8,14 +8,19 @@ import pandas as pd
 import time
 start_time = time.time()
 
-def buildGraph(corpus_dir, pref_filename, tag_filename, graph_name, graph_type):
+def buildGraph(corpus_dir, pref_filename, tag_filename, graph_name, graph_type, pref_type):
 	print("reference loading")
 	df_tag = pd.read_table(join(corpus_dir, tag_filename))
 	df_pref = pd.read_table(join(corpus_dir, pref_filename))
 
 	if graph_type == 'w':
-		print("building the graph")
-		G = TriGraph(df_tag, df_pref)
+		if pref_type == 'dense':
+			print("building the dense preference graph")
+			G = TriGraph(df_tag, df_pref, ifDense=True)
+		else:
+			print("building the sparse preference graph")
+			G = TriGraph(df_tag, df_pref, ifDense=False)
+
 	elif graph_type == 'w/o':
 		print("building the graph w/o preference part")
 		G = TriGraphWoPref(df_tag, df_pref)
@@ -53,11 +58,13 @@ def main():
                        help='graph_name')
 	parser.add_argument('--graph_type', type=str, default='w',
                        help='graph_type')
+	parser.add_argument('--pref_type', type=str, default='dense',
+                       help='pref_type')
 
 
 	args = parser.parse_args()
 
-	G = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name, args.graph_type)
+	G = buildGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name, args.graph_type, args.pref_type)
 
 	writeGraph(G, args.graph_name, args.graph_type)
 
