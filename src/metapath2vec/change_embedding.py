@@ -22,6 +22,7 @@ def change_embedding(args):
 
 
 if __name__ == "__main__":
+    # python ./src/metapath2vec/change_embedding.py --model_directory corpus/log_w10_e10_s20 --model_name model_epoch4.ckpt
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name', type = str)
     parser.add_argument('--model_directory', type = str)
