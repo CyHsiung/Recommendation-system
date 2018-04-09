@@ -17,7 +17,7 @@ from src.metapath2vec.train import main, parse_args
 from src.metapath2vec.extract import output_numpy
 
 corpus_dir = join(project_dir, 'corpus')
-def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, args = None, meta_path_format, number): 
+def meta2vec_for_HIN(nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, args = None, meta_path_format, number): 
     stepInEachPath = args.stepInEachPath
     embedDim = 100
     writeFileName = 'random_walk.txt'
@@ -45,7 +45,7 @@ def meta2vecHIN(args, nodeById, userNum, prodNum, tag_fileName = None, pref_file
     userEmbedList = []
     prodEmbedList = []
     for i in range(len(metaList)):
-        user_feature, item_feature, _ = meta2vec(nodeById = nodeById, userNum = userNum, prodNum = prodNum, args = args)
+        user_feature, item_feature, _ = meta2vec_for_HIN(nodeById = nodeById, userNum = userNum, prodNum = prodNum, args = args, meta_path_format = metaList[i], number = i)
         userEmbedList.append(user_feature)
         prodEmbedList.append(item_feature)
     return userEmbedList, prodEmbedList
