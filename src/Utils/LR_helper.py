@@ -151,7 +151,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 				except:
 					item = df_table['new2old']['item_D'][pref]
 				item_set.add(str(item))
-# 
+ 
 			for item in item_set:
 				real_idx = find_item_index(item, df_table)
 				real_user_name = find_user_name(user_name, df_table)
@@ -207,3 +207,25 @@ def DCG_calculator(rating_list):
 
 	return res
 		
+def hin_generate_data(user_feature, item_feature, training_ratio, skin_num=2):
+	total_x_train, total_x_test, val_x, total_y_train, total_y_test, val_y = [], [], [], [], [], []
+
+	for i in skin_num:
+		x_train, y_train, x_test, y_test = generate_data(user_feature[i], item_feature[i])
+		n = x_train.shape[0]
+		train_num = int(training_ratio*n)
+		total_x_train.append(x_train[:train_num, :])
+		total_x_test.append(x_test)
+		val_x.append(x_train[train_num:, :])
+		total_y_train = list(y_train[:train_num])
+		val_y = list(y_train[train_num:])
+		total_y_test = list(y_test)
+
+	return total_x_train, total_y_train, val_x, val_y, total_x_test, total_y_test
+
+def manipulate(array):
+	inf_idx = np.where(np.isinf(array))
+	fin_idx = np.where(np.isfinite(array))
+	max_ = np.max(array[fin_idx])
+	array[inf_idx] = max_
+	return array

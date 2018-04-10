@@ -5,12 +5,13 @@ from sklearn.ensemble import RandomForestRegressor
 from collections import OrderedDict
 
 from metapath2vec.meta2vec import meta2vec
+from metapath2vec.meta2vecHIN import *
 from Utils.LR_helper import *
 from PPR import *
 
 
 def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
-	clf = RandomForestRegressor()
+	clf = RandomForestRegressor(random_state=42, n_jobs=-1)
 
 	'''
 	Tunning Code
@@ -41,6 +42,7 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 		print("PPR feature generating")
 		user_feature, item_feature = PPR_feature_generator(G, args.tol, args.maxIter, 0.85, args.graph_type)
 		# user_feature, item_feature = np.zeros((10, 502)), np.zeros((36, 502))
+		print('user shape:', user_feature.shape, 'item shape:', item_feature.shape)
 	elif feature_type == 'meta2vec':
 		n = G.getCount(False)
 
@@ -48,14 +50,37 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 		user_feature, item_feature, _ = meta2vec(nodeById = G.NodeList, userNum = n[0], prodNum = n[2], args = args)
 		# user_feature, item_feature = np.zeros((10, 100)), np.zeros((376, 200))
 
-	print('user shape:', user_feature.shape, 'item shape:', item_feature.shape)
+		print('user shape:', user_feature.shape, 'item shape:', item_feature.shape)
 
-
-
-	
 
 	print("generating training data")
-	x_train, y_train, x_test, y_test = generate_data(user_feature, item_feature, G, removed_pre, df_pref, df_table, args.graph_type)
+	if feature_type == 'HIN':
+		n = G.getCount(False)
+		user_feature, item_feature = meta2vecHIN(nodeById = G.NodeList, userNum = n[0], prodNum = n[2], args = args)
+		total_x_train, total_y_train, val_x, val_y, total_x_test, total_y_test = hin_generate_data(user_feature, item_feature, 0.8)
+
+	else:
+		x_train, y_train, x_test, y_test = generate_data(user_feature, item_feature, G, removed_pre, df_pref, df_table, args.graph_type)
+
+	# Save np array
+	from os.path import join
+	print(args.corpus_dir)
+	print(args.graph_name)
+	print(str(args.maxIter))
+
+	a = join(args.corpus_dir, "PPR")
+	np.save(join(args.corpus_dir, "PPR", args.graph_name + "_" + str(args.maxIter) + "_x_train.npy"), x_train)
+	np.save(join(args.corpus_dir, "PPR", args.graph_name + "_" + str(args.maxIter) + "_y_train.npy"), y_train)
+	np.save(join(args.corpus_dir, "PPR", args.graph_name + "_" + str(args.maxIter) + "_x_test.npy"), x_test)
+	np.save(join(args.corpus_dir, "PPR", args.graph_name + "_" + str(args.maxIter) + "_y_test.npy"), y_test)
+	
+
+	# manuipolation
+	x_train = manipulate(x_train)
+	# y_train = manipulate(y_train)
+	x_test = manipulate(x_test)
+	# y_test = manipulate(y_test)
+
 
 
 	print("training the model")
