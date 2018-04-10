@@ -10,8 +10,8 @@ models_dir = join(project_dir, 'models')
 sys.path.append(project_dir)
 from src.HIN.load_data import test_load_test
 
-loadModel_dir = 'HIN_180409_032804'
-loadModelName = 'loss_0.032'
+loadModel_dir = 'HIN_model'
+loadModelName = 'best'
 
 loadModel_dir = join(models_dir, loadModel_dir)
 

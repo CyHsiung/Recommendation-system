@@ -16,7 +16,7 @@ models_dir = join(project_dir, 'models')
 if not os.path.exists(models_dir):
     os.makedirs(models_dir)
 
-saveModel_dir = join(models_dir, 'HIN_' + datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
+saveModel_dir = join(models_dir, 'HIN_model')
 os.makedirs(saveModel_dir)
 
 def train_neural_network(x_train_list, y_train, x_val_list, y_val, learning_rate = 0.05, drop_rate = 0.7, epochs = 10, batch_size = 5):
@@ -72,6 +72,7 @@ def train_neural_network(x_train_list, y_train, x_val_list, y_val, learning_rate
             if valLoss < minLoss:
                 # save model when better performance
                 saver.save(sess, join(saveModel_dir, 'loss_' + str(valLoss)))
+                saver.save(sess, join(saveModel_dir, 'best'))
                 minLoss = valLoss 
 
         end_time = datetime.datetime.now()
