@@ -207,19 +207,20 @@ def DCG_calculator(rating_list):
 
 	return res
 		
-def hin_generate_data(user_feature, item_feature, training_ratio, skin_num=2):
+def hin_generate_data(user_feature, item_feature, training_ratio, G, removed_pre, df_pref, df_table, graph_type, skin_num=2):
 	total_x_train, total_x_test, val_x, total_y_train, total_y_test, val_y = [], [], [], [], [], []
 
-	for i in skin_num:
-		x_train, y_train, x_test, y_test = generate_data(user_feature[i], item_feature[i])
+	for i in range(skin_num):
+		x_train, y_train, x_test, y_test = generate_data(user_feature[i], item_feature[i], G, removed_pre, df_pref, df_table, graph_type)
 		n = x_train.shape[0]
+
 		train_num = int(training_ratio*n)
 		total_x_train.append(x_train[:train_num, :])
 		total_x_test.append(x_test)
 		val_x.append(x_train[train_num:, :])
 		total_y_train = list(y_train[:train_num])
 		val_y = list(y_train[train_num:])
-		total_y_test = list(y_test)
+		total_y_test = list(y_test[0])
 
 	return total_x_train, total_y_train, val_x, val_y, total_x_test, total_y_test
 

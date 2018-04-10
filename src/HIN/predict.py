@@ -17,6 +17,7 @@ loadModel_dir = join(models_dir, loadModel_dir)
 
 
 def predict(x_test_list, y_test, batch_size = 5):
+    tf.reset_default_graph()
     model_saver = tf.train.import_meta_graph(join(loadModel_dir, loadModelName + '.meta'))
     with tf.Session() as sess:
         acc = 0
@@ -44,7 +45,10 @@ def predict(x_test_list, y_test, batch_size = 5):
             for i in range(element.shape[0]):
                 y_list.append(element[i, 0])
             # print(sess.run(y_predict, feed_dict={x_input_0: mini_batch_x_test[0], x_input_1: mini_batch_x_test[1], y_input: mini_batch_y_test}))
-        print(y_list)
+    print("y_list: ", y_list)
+    print("predict over")
+    
+    return y_list
         
 
 if __name__ == '__main__':

@@ -17,7 +17,8 @@ if not os.path.exists(models_dir):
     os.makedirs(models_dir)
 
 saveModel_dir = join(models_dir, 'HIN_model')
-os.makedirs(saveModel_dir)
+if not os.path.exists(saveModel_dir):
+    os.makedirs(saveModel_dir)
 
 def train_neural_network(x_train_list, y_train, x_val_list, y_val, learning_rate = 0.05, drop_rate = 0.7, epochs = 10, batch_size = 5):
     x_input_0 = tf.placeholder(tf.float32, shape=(None, 300), name = 'input_0')
