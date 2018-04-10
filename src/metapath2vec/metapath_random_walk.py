@@ -45,7 +45,9 @@ def create_path(num, catagory, stepInEachPath, f, nodeById, meta_path_format):
         # Id, Type, next_user, next_pref, next_prod, next_tags
         curNode = nodeById[startKey]
         # type of start node index in meta_path_format
-        # so the next one's type would be idBias + 1 
+        # so the next one's type would be idBias + 1
+        if curNode['Type'] not in meta_path_format:
+            break
         idBias = meta_path_format.index(curNode['Type'])
         f.write("{}".format(curNode['Id']))
         for j in range(stepInEachPath - 1):
@@ -74,6 +76,7 @@ def create_path(num, catagory, stepInEachPath, f, nodeById, meta_path_format):
             f.write(" {}".format(curNode['Id']))
         f.write("\n")
 def metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format):
+    print(meta_path_format)
     f = open(join(corpus_dir, writeFileName), 'w')
     create_path(userNum, 'user', stepInEachPath, f, nodeById, meta_path_format)
     create_path(prodNum, 'product_U', stepInEachPath, f, nodeById, meta_path_format)

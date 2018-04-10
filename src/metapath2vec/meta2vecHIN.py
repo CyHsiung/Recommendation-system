@@ -17,7 +17,11 @@ from src.metapath2vec.train import main, parse_args
 from src.metapath2vec.extract import output_numpy
 
 corpus_dir = join(project_dir, 'corpus')
-def meta2vec_for_HIN(nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, args = None, meta_path_format, number): 
+models_dir = join(project_dir, 'models')
+if not os.path.exists(models_dir):
+    os.makedirs(models_dir)
+
+def meta2vec_for_HIN(meta_path_format, number, nodeById = None, userNum = None, prodNum = None, tag_fileName = None, pref_fileName = None, args = None): 
     stepInEachPath = args.stepInEachPath
     embedDim = 100
     writeFileName = 'random_walk.txt'
@@ -33,7 +37,8 @@ def meta2vec_for_HIN(nodeById = None, userNum = None, prodNum = None, tag_fileNa
     metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format)
     # train the model 
     # args = parse_args(embedDim, nEpoch, windowSize)
-    args.log = join(corpus_dir, "metaHIN_" + str(number))
+    # args.log = join(models_dir, "metaHIN_" + str(number))
+    print(args.log)
     main(args)
     # output two embed matrix and the miss user list
     userEmbed, prodEmbed, missingUser = output_numpy(userNum, prodNum, embedDim, args.log)
@@ -41,11 +46,14 @@ def meta2vec_for_HIN(nodeById = None, userNum = None, prodNum = None, tag_fileNa
 
 def meta2vecHIN(args, nodeById, userNum, prodNum, tag_fileName = None, pref_fileName = None, metaPathList = None):
     if metaPathList == None:
-        metaPathList = [['user', 'pref', 'prod', 'tags', 'prod', 'pref'], ["prod", "tags"]]
+        metaPathList = [['prod', 'tags'], ['user', 'pref', 'prod', 'tags', 'prod', 'pref']]
     userEmbedList = []
     prodEmbedList = []
-    for i in range(len(metaList)):
-        user_feature, item_feature, _ = meta2vec_for_HIN(nodeById = nodeById, userNum = userNum, prodNum = prodNum, args = args, meta_path_format = metaList[i], number = i)
+    for i in range(len(metaPathList)):
+        try:
+            user_feature, item_feature, _ = meta2vec_for_HIN(nodeById = nodeById, userNum = userNum, prodNum = prodNum, args = args, meta_path_format = metaPathList[i], number = i)
+        except Exception as e: 
+            print(e)
         userEmbedList.append(user_feature)
         prodEmbedList.append(item_feature)
     return userEmbedList, prodEmbedList
