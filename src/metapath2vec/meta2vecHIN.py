@@ -50,10 +50,7 @@ def meta2vecHIN(args, nodeById, userNum, prodNum, tag_fileName = None, pref_file
     userEmbedList = []
     prodEmbedList = []
     for i in range(len(metaPathList)):
-        try:
-            user_feature, item_feature, _ = meta2vec_for_HIN(nodeById = nodeById, userNum = userNum, prodNum = prodNum, args = args, meta_path_format = metaPathList[i], number = i)
-        except Exception as e: 
-            print(e)
+        user_feature, item_feature, _ = meta2vec_for_HIN(nodeById = nodeById, userNum = userNum, prodNum = prodNum, args = args, meta_path_format = metaPathList[i], number = i)
         userEmbedList.append(user_feature)
         prodEmbedList.append(item_feature)
     return userEmbedList, prodEmbedList

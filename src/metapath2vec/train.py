@@ -6,6 +6,7 @@ import argparse
 import sys
 import os
 import time
+import tensorflow as tf
 
 from os.path import join
 # project_dir: Recommedation/
@@ -46,7 +47,8 @@ def main(args):
     else:
         os.makedirs(args.log)
         print("made the log directory",args.log)
-
+    
+    tf.reset_default_graph()
     dataset=Dataset(random_walk_txt=args.walks,node_type_mapping_txt=args.types,window_size=args.window)
     print(dataset)
     center_node_placeholder,context_node_placeholder,negative_samples_placeholder,loss = build_model(BATCH_SIZE=1,VOCAB_SIZE=len(dataset.nodeid2index),EMBED_SIZE=args.embedding_dim,NUM_SAMPLED=args.negative_samples)
