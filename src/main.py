@@ -114,7 +114,6 @@ def main():
 	evaluation(G, df_pref, df_tag, df_table, args.feature_type, args)
 
 
-
 if __name__ == '__main__':
 	start_time = time.time()
 	main()
