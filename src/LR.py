@@ -105,6 +105,7 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 
 	offset = 0
 	DCG = []
+	base_DCG = []
 	for item_per_user in item_num:
 		y_user = y_predict[offset:offset + item_per_user]							# extract user's data
 		if args.feature_type == 'PPR' or args.feature_type == 'meta2vec':
@@ -120,6 +121,7 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 		idx_sorted = sorted(range(len(y_user)), key = lambda i: -y_user[i])		# find the order 
 		rate_list = rate_user[idx_sorted]										# find the rate order
 		DCG.append(DCG_calculator(rate_list))									# find the DCG of this user
+		base_DCG.append(DCG_calculator(sorted(rate_list)))
 		offset += item_per_user													# update offset
 		print(rate_list)
 
@@ -129,8 +131,8 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 	n = len(DCG)
 	# print(DCG)
 	# print(IDCG)
-	for dcg, idcg in zip(DCG, IDCG):
-		score += dcg / idcg
+	for dcg, idcg, base_dcg in zip(DCG, IDCG, base_DCG):
+		score += (dcg - base_dcg) / (idcg - base_dcg)
 
 	score /= n
 
