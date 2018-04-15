@@ -16,12 +16,12 @@ class TriGraph():
         if df_tag is not None and df_pref is not None: 
             self.dict = {}
             self.userNum = 0
-            self.userCount = -1
-            self.prefCount = -1
-            self.prodUCount = -1
-            self.prodDCount = -1
-            self.tagUCount = -1
-            self.tagDCount = -1
+            self.userCount = 0
+            self.prefCount = 0
+            self.prodUCount = 0
+            self.prodDCount = 0
+            self.tagUCount = 0
+            self.tagDCount = 0
         
             self.users = {}
             self.prefs = {}
@@ -172,32 +172,32 @@ class TriGraph():
         id = str(id)
         if type == 'user':
             if id not in self.users:
-                self.userCount+=1
                 self.users[id] = 'user_' + str(self.userCount)
+                self.userCount+=1
             return self.users[id]
         
         if type == 'product':
             if desire == 'D':
                 if id not in self.products_D:
-                    self.prodDCount+=1
                     self.products_D[id] = 'product_D_' + str(self.prodDCount)
+                    self.prodDCount+=1
                 return self.products_D[id]
             if desire == 'U':
                 if id not in self.products_U:
-                    self.prodUCount+=1
                     self.products_U[id] = 'product_U_' + str(self.prodUCount)
+                    self.prodUCount+=1
                 return self.products_U[id]
         
         if type == 'tag':
             if desire == 'D':
                 if id not in self.tags_D:
-                    self.tagDCount+=1
                     self.tags_D[id] = 'tags_D_' + str(self.tagDCount)
+                    self.tagDCount+=1
                 return self.tags_D[id]
             if desire == 'U':
                 if id not in self.tags_U:
-                    self.tagUCount+=1
                     self.tags_U[id] = 'tags_U_' + str(self.tagUCount)
+                    self.tagUCount+=1
                 return self.tags_U[id]
         
         return    
@@ -205,8 +205,8 @@ class TriGraph():
     def compare(self, a, b):
         id = str(a)+'_'+str(b)
         if id not in self.prefs:
-            self.prefCount+=1
             self.prefs[str(a)+'_'+str(b)] = 'pref_'+ str(a) + '_' + str(b) + '_' + str(self.prefCount)
+            self.prefCount+=1
         return self.prefs[id]
 
     def buildMapping(self, outfileName):
@@ -249,13 +249,13 @@ class TriGraph():
             pbar.update(1)
         pbar.close()
         
-    def buildNodeList(self, remove = True):
+    def buildNodeList(self):
         print("Building the NodeList")
         self.userNum = self.userCount+1
         for key in tqdm(self.dict):
-            if remove and not self.dict[key]:
-                self.userNum -=1
-                continue
+            #if remove and not self.dict[key]:
+            #    self.userNum -=1
+            #    continue
             self.NodeList[key] = {}
             self.NodeList[key]['next_user'] = []
             self.NodeList[key]['next_pref'] = []
@@ -267,9 +267,10 @@ class TriGraph():
                 s = 'next_' + item[:4]
                 self.NodeList[key][s].append(item)   
     
-    def getCount(self, remove = True):
-        if not remove:
-            return [self.userCount+1, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
-        return [self.userNum, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
+    def getCount(self):
+        #if not remove:
+        #    return [self.userCount+1, self.prefCount+1, self.prodUCount+1, self.prodDCount+1, self.tagUCount+1, self.tagDCount+1]
+        
+        return [self.userCount, self.prefCount, self.prodUCount, self.prodDCount, self.tagUCount, self.tagDCount]
 
     
