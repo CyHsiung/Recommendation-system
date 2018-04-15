@@ -107,7 +107,7 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 	DCG = []
 	for item_per_user in item_num:
 		y_user = y_predict[offset:offset + item_per_user]							# extract user's data
-		if args.feature_type == 'PPR' or args.feature_type == 'semi2vec':
+		if args.feature_type == 'PPR' or args.feature_type == 'meta2vec':
 			if args.graph_type == 'w':
 				rate_user = y_test[0][offset:offset + item_per_user]
 			else:

@@ -68,7 +68,7 @@ def PPR_calculator(M, tol, maxIter, beta, e):
 	r_pre[0] = 1
 	iterCnt = 0
 
-	while norm(r - r_pre) > tol and iterCnt < maxIter:
+	while norm(r - r_pre)/np.sqrt(r.shape[0]) > tol and iterCnt < maxIter:
 		r_pre = r
 		r = beta * M * r + (1 - beta) * e
 		iterCnt += 1

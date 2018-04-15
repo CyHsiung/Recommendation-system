@@ -21,7 +21,8 @@ def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = Non
     embedDim = 100
     writeFileName = 'random_walk.txt'
     if args.graph_type == 'w':
-        meta_path_format = ['user', 'pref', 'prod', 'tags', 'prod', 'pref']
+        # meta_path_format = ['user', 'pref', 'prod', 'tags', 'prod', 'pref']
+        meta_path_format = ['prod', 'tags']
     else:
         meta_path_format = ['user', 'prod', 'tags', 'prod']
         
