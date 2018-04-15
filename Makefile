@@ -1,4 +1,4 @@
-all: build_graph HIN
+all: toy_extractor build_graph PPR
 
 preprocessing:
 	python ./src/preprocessing.py

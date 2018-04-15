@@ -91,7 +91,7 @@ def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0
 
 def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_table, graph_type):
 	x_train, y_train, x_test, y_test, original_label = [], [], [], [], []
-	user_num = graph.getCount(False)[0]
+	user_num = graph.getCount()[0]
 
 	if graph_type == 'w':
 		print("generating data (with preference)")
@@ -137,7 +137,7 @@ def generate_data(user_feature, item_feature, graph, removed_pre, df_pref, df_ta
 		next_node = 'next_prod'
 		# Generating training data
 		print("Generating training data !!!!")
-		user_num = graph.getCount(False)[0]			# Still getting confuse
+		user_num = graph.getCount()[0]			# Still getting confuse
 		for idx in range(user_num):
 			user_name = "user_"+str(idx)
 			item_set = set()

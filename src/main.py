@@ -107,9 +107,6 @@ def main():
 
 	G, df_pref, df_tag, df_table = loadGraph(args.corpus_dir, args.prefFileName, args.tagFileName, args.graph_name, args.graph_type)
 
-	# for key, value in df_table['old2new']['item_U'].items():
-	# 	print(key, value)
-
 
 	evaluation(G, df_pref, df_tag, df_table, args.feature_type, args)
 

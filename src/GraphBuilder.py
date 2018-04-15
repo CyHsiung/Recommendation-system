@@ -28,7 +28,7 @@ def buildGraph(corpus_dir, pref_filename, tag_filename, graph_name, graph_type, 
 		print("graph_type error (input should be w or w/o)")
 		print("right now graph_type is :", graph_type)
 
-	G.buildNodeList(False)
+	G.buildNodeList()
 
 	G.buildMapping(graph_name+'_table')
 	
