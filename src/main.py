@@ -97,6 +97,7 @@ def main():
 	parser.add_argument('--window',default = 3,type=int,help='context window size')
 
 	parser.add_argument('--stepInEachPath',default = 20,type=int,help='step in each random walk path')
+	parser.add_argument('--trainOrTest',default = 'train',type=str,help='train / test')
 
 
 

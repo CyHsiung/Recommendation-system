@@ -4,6 +4,7 @@ import os
 import sys
 from os.path import join
 from tqdm import tqdm
+import shutil
 
 import datetime
 
@@ -17,8 +18,9 @@ if not os.path.exists(models_dir):
     os.makedirs(models_dir)
 
 saveModel_dir = join(models_dir, 'HIN_model')
-if not os.path.exists(saveModel_dir):
-    os.makedirs(saveModel_dir)
+if os.path.exists(saveModel_dir):
+    shutil.rmtree(saveModel_dir, ignore_errors=True)
+os.makedirs(saveModel_dir)
 
 def train_neural_network(x_train_list, y_train, x_val_list, y_val, learning_rate = 0.05, drop_rate = 0.7, epochs = 10, batch_size = 5):
     x_input_0 = tf.placeholder(tf.float32, shape=(None, 300), name = 'input_0')
@@ -67,7 +69,7 @@ def train_neural_network(x_train_list, y_train, x_val_list, y_val, learning_rate
                 if not mini_batch_x_val:
                     continue
                 loss += sess.run(cost, feed_dict={x_input_0: mini_batch_x_val[0], x_input_1: mini_batch_x_val[1], y_input: mini_batch_y_val,})
-            valLoss = round(loss / numValBatches, 3)
+            valLoss = round(loss / (numValBatches * batch_size), 3)
             end_time_epoch = datetime.datetime.now()
             print(' Testing Set loss:', valLoss, ' Time elapse: ', str(end_time_epoch - start_time_epoch))
             if valLoss < minLoss:
