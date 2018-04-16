@@ -33,11 +33,13 @@ def meta2vec(nodeById = None, userNum = None, prodNum = None, tag_fileName = Non
     # get graph parameter
     if not nodeById:
         nodeById, userNum, prodNum = import_graph(tag_fileName, pref_fileName)
-    # produce random path
-    metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format)
-    # train the model 
-    # args = parse_args(embedDim, nEpoch, windowSize)
-    main(args)
+    if args.trainOrTest == 'train':
+        # produce random path
+        metaPath_random_walk(userNum, prodNum, stepInEachPath, writeFileName, nodeById, meta_path_format)
+        # train the model 
+        # args = parse_args(embedDim, nEpoch, windowSize)
+        main(args)
+
     # output two embed matrix and the miss user list
     userEmbed, prodEmbed, missingUser = output_numpy(userNum, prodNum, embedDim, args.log)
     return userEmbed, prodEmbed, missingUser

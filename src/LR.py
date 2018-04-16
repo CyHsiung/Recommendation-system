@@ -2,6 +2,8 @@ from os.path import join
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
+# from sklearn.linear_model import LinearRegression as LR
+# from sklearn.svm import SVR
 from collections import OrderedDict
 
 from metapath2vec.meta2vec import meta2vec
@@ -14,27 +16,8 @@ from HIN.predict import predict
 
 def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 	clf = RandomForestRegressor(random_state=42, n_jobs=-1)
-
-	'''
-	Tunning Code
-	'''
-	# m_k = 0
-	# m_score = 0
-
-	# # klist = [i for i in range(1,50,1)]
-	# klist = [0]
-	# for k in klist:
-	#     clf = LR(random_state=7,n_estimators=62,max_depth=15)
-	#     X_select= X[:,idlist[:292]]
-	#     score = cross_val_score(clf,X_select,Y,cv=5).mean()
-
-	#     print('k= ',k,' acc = ',score)
-	#     if m_score<score:
-	#         m_score = score
-	#         m_k = k
-
-	# print('best choise')
-	# print('k= ',m_k,' acc = ',m_score)
+	# clf = LR(n_jobs=-1)
+	# clf = SVR()
 
 	# def removed_edge(graph, df_pref, df_table, drop_pre_thr = 30, drop_user_rate = 0.3, drop_pre_rate = 0.3):
 	print("removing edges from graph")
@@ -49,7 +32,7 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 			print("generating training data")
 			x_train, y_train, x_test, y_test = generate_data(user_feature, item_feature, G, removed_pre, df_pref, df_table, args.graph_type)
 		elif feature_type == 'meta2vec':
-			n = G.getCount(False)
+			n = G.getCount()
 
 			print("meta2vec feature generating")
 			user_feature, item_feature, _ = meta2vec(nodeById = G.NodeList, userNum = n[0], prodNum = n[2], args = args)
@@ -90,7 +73,7 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 
 	elif feature_type == 'HIN':
 		print("generating training data")
-		n = G.getCount(False)
+		n = G.getCount()
 		user_feature, item_feature = meta2vecHIN(nodeById = G.NodeList, userNum = n[0], prodNum = n[2], args = args)
 		
 		print("Hin training data combinding")
@@ -129,8 +112,6 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 	print("evaluating")
 	score = 0
 	n = len(DCG)
-	# print(DCG)
-	# print(IDCG)
 	for dcg, idcg, base_dcg in zip(DCG, IDCG, base_DCG):
 		score += (dcg - base_dcg) / (idcg - base_dcg)
 
