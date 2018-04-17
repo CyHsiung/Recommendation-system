@@ -43,19 +43,6 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 			x_train, y_train, x_test, y_test = generate_data(user_feature, item_feature, G, removed_pre, df_pref, df_table, args.graph_type)		
 	
 
-		# Save np array
-		from os.path import join
-		print(args.corpus_dir)
-		print(args.graph_name)
-		print(str(args.maxIter))
-
-		a = join(args.corpus_dir, "PPR")
-		np.save(join(args.corpus_dir, "PPR", args.graph_name + "_" + str(args.maxIter) + "_x_train.npy"), x_train)
-		np.save(join(args.corpus_dir, "PPR", args.graph_name + "_" + str(args.maxIter) + "_y_train.npy"), y_train)
-		np.save(join(args.corpus_dir, "PPR", args.graph_name + "_" + str(args.maxIter) + "_x_test.npy"), x_test)
-		np.save(join(args.corpus_dir, "PPR", args.graph_name + "_" + str(args.maxIter) + "_y_test.npy"), y_test)
-		
-
 		# manuipolation
 		x_train = manipulate(x_train)
 		# y_train = manipulate(y_train)
@@ -88,7 +75,6 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 
 	offset = 0
 	DCG = []
-	base_DCG = []
 	for item_per_user in item_num:
 		y_user = y_predict[offset:offset + item_per_user]							# extract user's data
 		if args.feature_type == 'PPR' or args.feature_type == 'meta2vec':
@@ -104,7 +90,6 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 		idx_sorted = sorted(range(len(y_user)), key = lambda i: -y_user[i])		# find the order 
 		rate_list = rate_user[idx_sorted]										# find the rate order
 		DCG.append(DCG_calculator(rate_list))									# find the DCG of this user
-		base_DCG.append(DCG_calculator(sorted(rate_list)))
 		offset += item_per_user													# update offset
 		print(rate_list)
 
@@ -112,8 +97,8 @@ def evaluation(G, df_pref, df_tag, df_table, feature_type, args):
 	print("evaluating")
 	score = 0
 	n = len(DCG)
-	for dcg, idcg, base_dcg in zip(DCG, IDCG, base_DCG):
-		score += (dcg - base_dcg) / (idcg - base_dcg)
+	for dcg, idcg in zip(DCG, IDCG):
+		score += (dcg) / (idcg)
 
 	score /= n
 
